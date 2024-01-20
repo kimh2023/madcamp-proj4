@@ -1,104 +1,100 @@
-import { Button, FloatButton, Layout, Typography, message } from "antd";
-import { useCallback, useState } from "react";
+import { Button, Layout, Typography, message } from "antd";
+import { Dispatch, useEffect, useState } from "react";
 import CheckBoxEdit from "./CheckBoxEdit";
 import styled from "styled-components";
 const { Header, Content, Footer, Sider } = Layout;
 import { TodoItemDto } from "@/types/TodoItemDto";
 import CheckBoxNoEdit from "./CheckBoxNoEdit";
 import { EditFilled, PlusOutlined, SaveFilled } from "@ant-design/icons";
+import NotFound from "../styledComponents/NotFound";
+import { axiosWrapper } from "@/utils/api/axiosWrapper";
+import axiosInstance from "@/utils/axiosInstance";
+import { useRouter } from "next/router";
+import { getDate } from "@/utils/formatDate";
 
-const defaultTodo: TodoItemDto = {
-  id: 0,
-  task: "",
-  date: new Date(),
-  place: "HOME",
-  animation: "STUDY",
-  order_in_date: 0,
-  completed_in_progress: "NOT_DONE",
-};
-
-const returnHighestOrder = (todoListState: TodoItemDto[]) => {
-  if (todoListState.length === 0) {
-    return 0;
-  }
-  return Math.max(...todoListState.map((item) => item.order_in_date));
-};
-
-const SideBar = ({ date }: { date: Date }) => {
+const SideBar = ({
+  todoListState,
+  todoListDispatch,
+}: {
+  todoListState: TodoItemDto[];
+  todoListDispatch: Dispatch<any>;
+}) => {
   const [isVisible, setIsVisible] = useState(true);
-  const [isEditMode, setIsEditMode] = useState(true);
-  const todoList = [
-    {
-      id: 1,
-      task: "영어 공부",
-      date: date,
-      place: "HOME",
-      animation: "STUDY",
-      order_in_date: 1,
-      completed_in_progress: "COMPLETE",
-    },
-    {
-      id: 2,
-      task: "화학 공부",
-      date: date,
-      place: "SCHOOL",
-      animation: "STUDY",
-      order_in_date: 4,
-      completed_in_progress: "IN_PROGRESS",
-    },
-    {
-      id: 3,
-      task: "몰라 공부",
-      date: date,
-      place: "HOME",
-      animation: "CLEAN",
-      order_in_date: 5,
-      completed_in_progress: "NOT_DONE",
-    },
-  ];
-  const [todoListState, setTodoListState] = useState<TodoItemDto[]>(todoList);
-  const setTodoItemState = useCallback(
-    (todoItemId: number | string, newState: Partial<TodoItemDto>) => {
-      setTodoListState((prevState) => {
-        const index = prevState.findIndex((item) => item.id === todoItemId);
-
-        if (index !== -1) {
-          const updatedTodoList = [...prevState];
-          updatedTodoList[index] = { ...updatedTodoList[index], ...newState };
-          return updatedTodoList;
-        }
-
-        return prevState;
-      });
-    },
-    [],
-  );
-
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const router = useRouter();
 
-  const addTodoItem = () => {
-    const newTodo = { ...defaultTodo };
-    const newOrder = returnHighestOrder(todoListState) + 1;
-    newTodo.order_in_date = newOrder;
-    newTodo.id = `newTodo${newOrder}`;
-    setTodoListState((prevState) => [...prevState, newTodo]);
-  };
-
-  const deleteTodoItem = (id: number | string) => {
-    alert("backend!!");
-    setTodoListState((prevState) =>
-      prevState.filter((todoItem) => todoItem.id !== id),
-    );
-    messageApi.info("삭제했습니다!");
+  const deleteTodoItem = async (id: number | string) => {
+    let success = true;
+    if (typeof id === "number") {
+      const { data, error } = await axiosWrapper(
+        axiosInstance.delete(`/todos/${id}`),
+      );
+      success = error === null;
+      console.log(data, error);
+    }
+    if (success) {
+      todoListDispatch({ type: "delete", id: id });
+      messageApi.success("삭제했습니다!");
+    } else {
+      messageApi.error("오류가 있었습니다");
+    }
   };
 
   const handleEdit = async () => {
+    let allError = false;
+
     if (isEditMode) {
-      alert("handleSave");
-      messageApi.info("저장했습니다!");
+      setIsUpdating(true);
+      await Promise.all(
+        todoListState.map(async (todoItem) => {
+          if (typeof todoItem.id === "string") {
+            if (todoItem.task === "") {
+              todoListDispatch({ type: "delete", id: todoItem.id });
+            } else {
+              const { data, error } = await axiosWrapper(
+                axiosInstance.post(`/todos`, {
+                  ...todoItem,
+                  id: null,
+                  date: getDate(router.query.date),
+                }),
+              );
+              if (error === null) {
+                todoListDispatch({
+                  type: "modify",
+                  id: todoItem,
+                  data: { id: data.id },
+                });
+              } else {
+                allError = true;
+              }
+            }
+          } else {
+            const { data, error } = await axiosWrapper(
+              axiosInstance.patch(`/todos/${todoItem.id}`, todoItem),
+            );
+            if (error !== null) {
+              allError = true;
+            }
+          }
+        }),
+      );
+      if (allError) {
+        messageApi.error("오류가 있었습니다");
+      } else {
+        messageApi.success("성공적으로 저장했습니다!");
+      }
+      setTimeout(() => setIsUpdating(false), 1000);
     }
     setIsEditMode((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    if (isEditMode && !isUpdating && todoListState.length == 0) {
+      todoListDispatch({ type: "new" });
+    }
+  });
 
   return (
     <Sider
@@ -115,13 +111,18 @@ const SideBar = ({ date }: { date: Date }) => {
             </Typography.Title>
 
             <TodoContainer>
+              {todoListState.length == 0 && !isEditMode && <NotFound />}
               {isEditMode
                 ? todoListState.map((todoItem: TodoItemDto, index) => (
                     <CheckBoxEdit
                       key={index}
                       todoItem={todoItem}
                       setTodoItemState={(newState) =>
-                        setTodoItemState(todoItem.id, newState)
+                        todoListDispatch({
+                          type: "modify",
+                          id: todoItem.id,
+                          data: newState,
+                        })
                       }
                       deleteTodoItem={() => deleteTodoItem(todoItem.id)}
                     />
@@ -134,7 +135,7 @@ const SideBar = ({ date }: { date: Date }) => {
                   type="primary"
                   shape="round"
                   icon={<PlusOutlined />}
-                  onClick={addTodoItem}
+                  onClick={() => todoListDispatch({ type: "new" })}
                 >
                   할 일 추가하기
                 </Button>
@@ -155,7 +156,6 @@ const SideBar = ({ date }: { date: Date }) => {
               style={{ marginTop: "auto", marginLeft: "auto" }}
               onClick={handleEdit}
             />
-            <FloatButton />
           </SideBarImageContainer>
         </SideBarContainer>
       )}
