@@ -6,6 +6,16 @@ const nextConfig = {
     BACKEND_URL: "http://localhost:3000",
   },
   transpilePackages: ["@ant-design"],
+  compiler: { styledComponents: true },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

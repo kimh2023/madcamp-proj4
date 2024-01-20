@@ -3,7 +3,6 @@ import { useCallback, useState } from "react";
 import CheckBoxEdit from "./CheckBoxEdit";
 import styled from "styled-components";
 const { Header, Content, Footer, Sider } = Layout;
-import backgroundImage from "../../../public/images/sidebar.png";
 import { TodoItemDto } from "@/types/TodoItemDto";
 import CheckBoxNoEdit from "./CheckBoxNoEdit";
 import { EditFilled, PlusOutlined, SaveFilled } from "@ant-design/icons";
@@ -179,7 +178,7 @@ const SideBarImageContainer = styled.div`
   height: 100%;
   border-radius: 20px;
   overflow: hidden;
-  background-image: url(${backgroundImage.src});
+  background-image: url(${process.env.FRONTEND_URL}/images/sidebar.png);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

@@ -3,28 +3,28 @@ import {
   EyeTwoTone,
   LockOutlined,
   MailOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Alert, Button, Form, Input, Layout, Typography } from "antd";
+import { Alert, Button, Form, Input, Typography } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import { AuthDiv, BackGroundLayout } from "./login";
 import { formatDate } from "../../utils/formatDate";
-import { useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/axiosInstance";
+import { SignUpDto } from "@/types/AuthDto";
+import { useState } from "react";
 
-const LoginPage = () => {
+const SignupPage = () => {
   const router = useRouter();
   const [errorCode, setErrorCode] = useState(null);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
 
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
-
   const [form] = Form.useForm();
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: SignUpDto) => {
     setErrorCode(null);
     const { data, error } = await axiosWrapper(
-      axiosInstance.post("/auth/login", values),
+      axiosInstance.post("/auth/signup", values),
     );
 
     if (error === null) {
@@ -45,26 +45,25 @@ const LoginPage = () => {
           height={176}
         />
         <Typography.Title level={2} style={{ fontFamily: "Pointer" }}>
-          로그인
+          회원가입
         </Typography.Title>
-
         <Form layout="horizontal" form={form} onFinish={onFinish}>
-          {isSuccessVisible && (
-            <Alert
-              message={"로그인 성공"}
-              type="success"
-              showIcon
-              style={{ marginBottom: "20px" }}
-            />
-          )}
           {errorCode && (
             <Alert
               message={
                 errorCode === 500
-                  ? "이메일 또는 비밀번호가 틀렸어"
-                  : "존제하지 않는 회원입니다"
+                  ? "오류가 있었어ㅠㅠ"
+                  : "이미 존제하는 회원입니다"
               }
               type="error"
+              showIcon
+              style={{ marginBottom: "20px" }}
+            />
+          )}
+          {isSuccessVisible && (
+            <Alert
+              message={"회원가입 성공"}
+              type="success"
               showIcon
               style={{ marginBottom: "20px" }}
             />
@@ -72,7 +71,8 @@ const LoginPage = () => {
           <Form.Item
             name="email"
             rules={[
-              { required: true, type: "email", message: "이메일을 입력해줘!" },
+              { required: true, message: "이메일을 입력해줘!" },
+              { type: "email", message: "올바른 이메일 형식이어야 해!" },
             ]}
           >
             <Input
@@ -82,8 +82,21 @@ const LoginPage = () => {
             />
           </Form.Item>
           <Form.Item
+            name="name"
+            rules={[{ required: true, message: "이름을 입력해줘!" }]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="이름"
+              allowClear
+            />
+          </Form.Item>
+          <Form.Item
             name="password"
-            rules={[{ required: true, message: "비밀번호를 입력해줘!" }]}
+            rules={[
+              { required: true, message: "비밀번호를 입력해줘!" },
+              { min: 8, message: "비밀번호를 8자 이상으로 설정해 줘!" },
+            ]}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
@@ -94,42 +107,44 @@ const LoginPage = () => {
               allowClear
             />
           </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            rules={[
+              { required: true, message: "비밀번호를 다시 입력해 줘!" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject("비밀번호가 일치하지 않아ㅠㅠ");
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="비밀번호 확인"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+              allowClear
+            />
+          </Form.Item>
           <Form.Item style={{ width: "100%" }}>
             <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-              로그인
+              가입하기
             </Button>
           </Form.Item>
           <Button
             type="text"
             style={{ width: "100%" }}
-            onClick={() => router.push("/auth/signup")}
+            onClick={() => router.push("/auth/login")}
           >
-            회원가입
+            로그인
           </Button>
         </Form>
       </AuthDiv>
     </BackGroundLayout>
   );
 };
-export default LoginPage;
-
-export const BackGroundLayout = styled(Layout)`
-  background-image: url(${process.env.FRONTEND_URL}/images/auth.jpg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-`;
-
-export const AuthDiv = styled.div`
-  margin: auto;
-  width: 400px;
-  background-color: white;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px;
-  padding-bottom: 50px;
-  row-gap: 15px;
-`;
+export default SignupPage;
