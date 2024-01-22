@@ -1,4 +1,4 @@
-import { TodoItemDto } from "@/types/TodoItemDto";
+import { TodoItemDto } from "@/types/TodoDto";
 import styled from "styled-components";
 import {
   BookFilled,

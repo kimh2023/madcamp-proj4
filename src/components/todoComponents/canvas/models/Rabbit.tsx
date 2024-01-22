@@ -15,17 +15,6 @@ const Rabbit = ({ ...props }: RabbitProps) => {
   const position = useMemo(() => props.position, []);
   const { actions } = useAnimations(model.animations, mesh);
 
-  const modelAnimations = model.animations;
-  console.log(modelAnimations);
-  const mixer = new THREE.AnimationMixer(model.scene);
-
-  model.animations.forEach((clip) => {
-    if (clip.name === "walk1") {
-      const action = mixer.clipAction(clip);
-      action.play();
-    }
-  });
-
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.5).play();
     return (): void => {
@@ -51,8 +40,16 @@ const Rabbit = ({ ...props }: RabbitProps) => {
     }
   });
 
+  useEffect(() =>
+    model.scene.traverse((child) => {
+      if (child.isObject3D) {
+        child.castShadow == true;
+      }
+    }),
+  );
+
   return (
-    <mesh ref={mesh} {...props} position={position}>
+    <mesh ref={mesh} {...props} position={position} castShadow>
       <primitive object={model.scene} />
     </mesh>
   );

@@ -5,7 +5,7 @@ import NotFound from "@/components/styledComponents/NotFound";
 import { useEffect, useReducer, useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/axiosInstance";
-import { TodoItemDto } from "@/types/TodoItemDto";
+import { Action, TodoItemDto } from "@/types/TodoDto";
 import {
   CalendarFilled,
   MoreOutlined,
@@ -15,6 +15,7 @@ import {
 import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
 import dayjs, { type Dayjs } from "dayjs";
 import TodoCanvas from "@/components/todoComponents/canvas/TodoCanvas";
+import TodoPlaceCanvas from "@/components/todoComponents/canvas/TodoPlaceCanvas";
 
 const defaultTodo: TodoItemDto = {
   id: 0,
@@ -32,12 +33,6 @@ const returnHighestOrder = (todoListState: TodoItemDto[]) => {
   }
   return Math.max(...todoListState.map((item) => item.order_in_date));
 };
-
-type Action =
-  | { type: "init"; data: TodoItemDto[] }
-  | { type: "new" }
-  | { type: "delete"; id: number | string }
-  | { type: "modify"; id: number | string; data: Partial<TodoItemDto> };
 
 const reducer = (state: TodoItemDto[], action: Action) => {
   if (action.type === "init") {
@@ -69,6 +64,7 @@ const TodoPage = () => {
   const [todoListState, todoListDispatch] = useReducer(reducer, []);
   const router = useRouter();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [place, setPlace] = useState<string>();
 
   useEffect(() => {
     const getTodoItems = async () => {
@@ -104,7 +100,13 @@ const TodoPage = () => {
         todoListState={todoListState}
         todoListDispatch={todoListDispatch}
       />
-      <TodoCanvas />
+      {!place && <TodoCanvas setPlace={setPlace} />}
+      {place && (
+        <TodoPlaceCanvas
+          todoListState={todoListState}
+          todoListDispatch={todoListDispatch}
+        />
+      )}
       <Drawer
         width={600}
         open={isCalendarOpen}

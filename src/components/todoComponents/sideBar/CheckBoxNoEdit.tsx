@@ -1,8 +1,10 @@
-import { TodoItemDto } from "@/types/TodoItemDto";
+import { TodoItemDto } from "@/types/TodoDto";
 import styled from "styled-components";
 import {
+  BookFilled,
   CheckCircleTwoTone,
   CloseCircleTwoTone,
+  HomeFilled,
   PlayCircleTwoTone,
 } from "@ant-design/icons";
 import { style } from "@/styles/variables";
@@ -29,9 +31,14 @@ const CheckBoxNoEdit = ({ todoItem }: { todoItem: TodoItemDto }) => {
           style={{ fontSize: "1.3rem" }}
         />
       )}
-      <Typography.Text>
+      <Typography.Text style={{ flexShrink: 0 }}>
         {todoItem.task ? todoItem.task : "이건 오늘 해야지!"}
       </Typography.Text>
+      {todoItem.place == "HOME" ? (
+        <HomeFilled style={{ marginLeft: "auto" }} />
+      ) : (
+        <BookFilled style={{ marginLeft: "auto" }} />
+      )}
     </TodoContainer>
   );
 };
