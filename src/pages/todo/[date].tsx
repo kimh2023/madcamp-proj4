@@ -1,4 +1,4 @@
-import { Calendar, Drawer, FloatButton, Layout } from "antd";
+import { Calendar, Drawer, FloatButton, Layout, Modal, Typography } from "antd";
 import SideBar from "@/components/sideBarComponents/SideBar";
 import { useRouter } from "next/router";
 import NotFound from "@/components/styledComponents/NotFound";
@@ -6,7 +6,12 @@ import { useEffect, useReducer, useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/axiosInstance";
 import { TodoItemDto } from "@/types/TodoItemDto";
-import { CalendarFilled } from "@ant-design/icons";
+import {
+  CalendarFilled,
+  LogoutOutlined,
+  SettingFilled,
+  UserOutlined,
+} from "@ant-design/icons";
 import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
 import dayjs, { type Dayjs } from "dayjs";
 
@@ -62,6 +67,8 @@ const reducer = (state: TodoItemDto[], action: Action) => {
 const TodoPage = () => {
   const [todoListState, todoListDispatch] = useReducer(reducer, []);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   useEffect(() => {
     const getTodoItems = async () => {
@@ -88,7 +95,14 @@ const TodoPage = () => {
     getTodoItems();
   }, [router.query.date]);
 
-  const [open, setOpen] = useState(false);
+  const handleLogout = async () => {
+    const { data, error } = await axiosWrapper(
+      axiosInstance.get(`/auth/logout`),
+    );
+    if (error === null) {
+      setIsModalOpen(false);
+    }
+  };
 
   if (typeof router.query.date !== "string" || todoListState === undefined) {
     return <NotFound></NotFound>;
@@ -101,8 +115,8 @@ const TodoPage = () => {
       />
       <Drawer
         width={600}
-        open={open}
-        onClose={() => setOpen(false)}
+        open={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
         title="날짜 선택하기"
       >
         <Calendar
@@ -115,7 +129,40 @@ const TodoPage = () => {
           }
         />
       </Drawer>
-      <FloatButton icon={<CalendarFilled />} onClick={() => setOpen(true)} />
+      <FloatButton
+        style={{ top: 30 }}
+        icon={<CalendarFilled />}
+        onClick={() => setIsCalendarOpen(true)}
+      />
+      <FloatButton.Group trigger="click" icon={<SettingFilled />}>
+        <FloatButton
+          icon={<LogoutOutlined />}
+          onClick={() => setIsModalOpen(true)}
+          tooltip={
+            <Typography.Text style={{ color: "white" }}>
+              로그아웃
+            </Typography.Text>
+          }
+        />
+        <FloatButton
+          icon={<UserOutlined />}
+          onClick={() => router.push(`/profile`)}
+          tooltip={
+            <Typography.Text style={{ color: "white" }}>
+              프로필 조회
+            </Typography.Text>
+          }
+        />
+      </FloatButton.Group>
+      <Modal
+        title="진짜로 로그아웃 해?"
+        open={isModalOpen}
+        onOk={handleLogout}
+        onCancel={() => setIsModalOpen(false)}
+        // confirmLoading={confirmLoading}
+        cancelText="앗 아니!"
+        okText="응..."
+      />
     </Layout>
   );
 };

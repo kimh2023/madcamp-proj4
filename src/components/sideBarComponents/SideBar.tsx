@@ -97,7 +97,7 @@ const SideBar = ({
   });
 
   return (
-    <Sider
+    <Layout.Sider
       collapsible
       width={isEditMode ? 700 : 300}
       onCollapse={() => setIsVisible((prevState) => !prevState)}
@@ -159,7 +159,7 @@ const SideBar = ({
           </SideBarImageContainer>
         </SideBarContainer>
       )}
-    </Sider>
+    </Layout.Sider>
   );
 };
 
