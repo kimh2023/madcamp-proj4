@@ -1,4 +1,4 @@
-import { Calendar, Drawer, FloatButton, Layout, Modal, Typography } from "antd";
+import { Calendar, Drawer, FloatButton, Layout, Typography } from "antd";
 import SideBar from "@/components/sideBarComponents/SideBar";
 import { useRouter } from "next/router";
 import NotFound from "@/components/styledComponents/NotFound";
@@ -8,8 +8,8 @@ import axiosInstance from "@/utils/axiosInstance";
 import { TodoItemDto } from "@/types/TodoItemDto";
 import {
   CalendarFilled,
-  LogoutOutlined,
-  SettingFilled,
+  MoreOutlined,
+  SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
@@ -67,7 +67,6 @@ const reducer = (state: TodoItemDto[], action: Action) => {
 const TodoPage = () => {
   const [todoListState, todoListDispatch] = useReducer(reducer, []);
   const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   useEffect(() => {
@@ -94,15 +93,6 @@ const TodoPage = () => {
     };
     getTodoItems();
   }, [router.query.date]);
-
-  const handleLogout = async () => {
-    const { data, error } = await axiosWrapper(
-      axiosInstance.get(`/auth/logout`),
-    );
-    if (error === null) {
-      setIsModalOpen(false);
-    }
-  };
 
   if (typeof router.query.date !== "string" || todoListState === undefined) {
     return <NotFound></NotFound>;
@@ -134,35 +124,26 @@ const TodoPage = () => {
         icon={<CalendarFilled />}
         onClick={() => setIsCalendarOpen(true)}
       />
-      <FloatButton.Group trigger="click" icon={<SettingFilled />}>
+      <FloatButton.Group trigger="click" icon={<MoreOutlined />}>
         <FloatButton
-          icon={<LogoutOutlined />}
-          onClick={() => setIsModalOpen(true)}
+          icon={<UserOutlined />}
+          onClick={() => router.push(`/settings/profile`)}
           tooltip={
             <Typography.Text style={{ color: "white" }}>
-              로그아웃
+              프로필 설정
             </Typography.Text>
           }
         />
         <FloatButton
-          icon={<UserOutlined />}
-          onClick={() => router.push(`/profile`)}
+          icon={<SettingOutlined />}
+          onClick={() => router.push(`/settings/account`)}
           tooltip={
             <Typography.Text style={{ color: "white" }}>
-              프로필 조회
+              계정 설정
             </Typography.Text>
           }
         />
       </FloatButton.Group>
-      <Modal
-        title="진짜로 로그아웃 해?"
-        open={isModalOpen}
-        onOk={handleLogout}
-        onCancel={() => setIsModalOpen(false)}
-        // confirmLoading={confirmLoading}
-        cancelText="앗 아니!"
-        okText="응..."
-      />
     </Layout>
   );
 };

@@ -18,8 +18,6 @@ const LoginPage = () => {
   const [errorCode, setErrorCode] = useState(null);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
 
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
-
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
     setErrorCode(null);
