@@ -18,8 +18,6 @@ const LoginPage = () => {
   const [errorCode, setErrorCode] = useState(null);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
 
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
-
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
     setErrorCode(null);
@@ -114,10 +112,9 @@ const LoginPage = () => {
 export default LoginPage;
 
 export const BackGroundLayout = styled(Layout)`
-  background-image: url(${process.env.FRONTEND_URL}/images/auth.jpg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-image: url(${process.env.FRONTEND_URL}/images/paper.jpg);
+  background-size: 400px 400px;
+  background-repeat: repeat;
   min-height: 100vh;
 `;
 

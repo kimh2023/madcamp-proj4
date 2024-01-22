@@ -3,10 +3,10 @@ import { Dispatch, useEffect, useState } from "react";
 import CheckBoxEdit from "./CheckBoxEdit";
 import styled from "styled-components";
 const { Header, Content, Footer, Sider } = Layout;
-import { TodoItemDto } from "@/types/TodoItemDto";
+import { Action, TodoItemDto } from "@/types/TodoDto";
 import CheckBoxNoEdit from "./CheckBoxNoEdit";
 import { EditFilled, PlusOutlined, SaveFilled } from "@ant-design/icons";
-import NotFound from "../styledComponents/NotFound";
+import NotFound from "../../styledComponents/NotFound";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/router";
@@ -17,7 +17,7 @@ const SideBar = ({
   todoListDispatch,
 }: {
   todoListState: TodoItemDto[];
-  todoListDispatch: Dispatch<any>;
+  todoListDispatch: Dispatch<Action>;
 }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -63,8 +63,8 @@ const SideBar = ({
               if (error === null) {
                 todoListDispatch({
                   type: "modify",
-                  id: todoItem,
-                  data: { id: data.id },
+                  id: todoItem.id,
+                  data: data,
                 });
               } else {
                 allError = true;
@@ -101,6 +101,7 @@ const SideBar = ({
       collapsible
       width={isEditMode ? 700 : 300}
       onCollapse={() => setIsVisible((prevState) => !prevState)}
+      style={{ height: "100vh" }}
     >
       {contextHolder}
       {isVisible && (
@@ -178,6 +179,9 @@ const SideBarImageContainer = styled.div`
   height: 100%;
   border-radius: 20px;
   overflow: hidden;
+  overflow: scroll;
+  overflow-x: hidden;
+
   background-image: url(${process.env.FRONTEND_URL}/images/sidebar.png);
   background-position: center;
   background-size: cover;
