@@ -147,10 +147,9 @@ interface StyledContentProps {
 }
 
 const StyledContent = styled(Layout.Content)<StyledContentProps>`
-  background-image: url(${process.env.FRONTEND_URL}/images/auth.jpg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-image: url(${process.env.FRONTEND_URL}/images/paper.jpg);
+  background-size: 400px 400px;
+  background-repeat: repeat;
   min-height: 100vh;
   min-width: 500px;
 

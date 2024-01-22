@@ -16,6 +16,7 @@ import {
 } from "@react-three/drei";
 import Road from "./models/Road";
 import School from "./models/School";
+import Terrain from "./models/Terrain";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -42,7 +43,7 @@ const TodoCanvasInner = ({
       />
       <Road />
       <School
-        position={[0, 18, 0]}
+        position={[-20, -1, 0]}
         onPointerEnter={() => {
           if (document.querySelector("body") !== null) {
             (document.querySelector("body") as HTMLBodyElement).style.cursor =
@@ -64,15 +65,7 @@ const TodoCanvasInner = ({
         }}
       />
 
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -1.2, 0]}
-        onClick={handleCanvasClick}
-        receiveShadow
-      >
-        <planeGeometry args={[10000, 10000]} />
-        <meshStandardMaterial color="gray" />
-      </mesh>
+      <Terrain onClick={handleCanvasClick} />
     </React.Fragment>
   );
 };

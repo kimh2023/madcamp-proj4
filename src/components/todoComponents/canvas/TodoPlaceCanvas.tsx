@@ -1,6 +1,6 @@
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { Layout } from "antd";
-import React, { Dispatch, Suspense, lazy, useState } from "react";
+import React, { Dispatch, Suspense, lazy, useMemo, useState } from "react";
 import NotFound from "../../styledComponents/NotFound";
 import { Vector3 } from "three";
 import {
@@ -9,6 +9,9 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { Action, TodoItemDto } from "@/types/TodoDto";
+import Todo from "./models/Todo";
+import Terrain from "./models/Terrain";
+import Arrow from "./models/Arrow";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -20,6 +23,18 @@ const TodoCanvasInner = ({
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
   );
+  const currentTodo = useMemo(
+    () =>
+      todoListState.filter(
+        (todoItem) => todoItem.completed_in_progress !== "COMPLETE",
+      ).length > 0
+        ? todoListState.filter(
+            (todoItem) => todoItem.completed_in_progress !== "COMPLETE",
+          )[0]
+        : null,
+    [todoListState],
+  );
+  console.log(currentTodo);
 
   const handleCanvasClick = (event: ThreeEvent<MouseEvent>) => {
     setRabbitPosition(new Vector3(event.point.x, 0, event.point.z));
@@ -32,16 +47,12 @@ const TodoCanvasInner = ({
         rotation={[0, 0, 0]}
         onClick={() => console.log("hi")}
       />
+      {todoListState.map((todoItem, index) => (
+        <Todo key={index} position={[index * 20, 0, 20 * (index % 2)]} />
+      ))}
 
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.2, 0]}
-        onClick={handleCanvasClick}
-        receiveShadow
-      >
-        <planeGeometry args={[10000, 10000]} />
-        <meshStandardMaterial color="gray" />
-      </mesh>
+      <Terrain onClick={handleCanvasClick} />
+      <Arrow />
     </React.Fragment>
   );
 };
