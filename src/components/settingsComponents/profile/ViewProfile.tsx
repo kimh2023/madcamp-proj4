@@ -27,12 +27,10 @@ const ViewProfile = () => {
 
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
-    console.log(values);
     setErrorCode(null);
     const { data, error } = await axiosWrapper(
       axiosInstance.patch("/users", values),
     );
-    console.log(data, error);
 
     if (error === null) {
       setIsSuccessVisible(true);
@@ -48,14 +46,12 @@ const ViewProfile = () => {
 
   const getUser = useCallback(async () => {
     const { data, error } = await axiosWrapper(axiosInstance.get(`/users`));
-    console.log(data, error);
     if (error === null) {
       setUserProfileInfo(data);
       form.setFieldsValue({
         email: data.email,
         name: data.name,
       });
-      console.log(data, data.name);
     } else {
       alert("에러 발생 로직 구현 필요");
     }

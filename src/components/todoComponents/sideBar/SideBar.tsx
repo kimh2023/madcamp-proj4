@@ -6,7 +6,7 @@ const { Header, Content, Footer, Sider } = Layout;
 import { TodoItemDto } from "@/types/TodoItemDto";
 import CheckBoxNoEdit from "./CheckBoxNoEdit";
 import { EditFilled, PlusOutlined, SaveFilled } from "@ant-design/icons";
-import NotFound from "../styledComponents/NotFound";
+import NotFound from "../../styledComponents/NotFound";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/router";

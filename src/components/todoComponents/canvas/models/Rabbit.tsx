@@ -1,9 +1,11 @@
 import React from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { MeshProps, useFrame } from "@react-three/fiber";
 
-const Rabbit = () => {
+interface RabbitProps extends MeshProps {}
+
+const Rabbit = ({ ...props }: RabbitProps) => {
   const model = useGLTF(`${process.env.FRONTEND_URL}/models/rabbit8.glb`);
   const modelAnimations = model.animations;
   console.log(modelAnimations);
@@ -21,6 +23,10 @@ const Rabbit = () => {
     mixer?.update(delta);
   });
 
-  return <primitive object={model.scene} />;
+  return (
+    <mesh {...props}>
+      <primitive object={model.scene} />
+    </mesh>
+  );
 };
 export default Rabbit;

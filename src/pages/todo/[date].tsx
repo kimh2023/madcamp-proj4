@@ -1,5 +1,5 @@
 import { Calendar, Drawer, FloatButton, Layout, Typography } from "antd";
-import SideBar from "@/components/sideBarComponents/SideBar";
+import SideBar from "@/components/todoComponents/sideBar/SideBar";
 import { useRouter } from "next/router";
 import NotFound from "@/components/styledComponents/NotFound";
 import { useEffect, useReducer, useState } from "react";
@@ -14,6 +14,7 @@ import {
 } from "@ant-design/icons";
 import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
 import dayjs, { type Dayjs } from "dayjs";
+import TodoCanvas from "@/components/todoComponents/canvas/TodoCanvas";
 
 const defaultTodo: TodoItemDto = {
   id: 0,
@@ -103,6 +104,7 @@ const TodoPage = () => {
         todoListState={todoListState}
         todoListDispatch={todoListDispatch}
       />
+      <TodoCanvas />
       <Drawer
         width={600}
         open={isCalendarOpen}

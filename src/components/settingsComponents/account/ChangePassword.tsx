@@ -17,12 +17,10 @@ const ChangePassword = () => {
 
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
-    console.log(values);
     setErrorCode(null);
     const { data, error } = await axiosWrapper(
       axiosInstance.post("/auth/change-password", values),
     );
-    console.log(data, error);
 
     if (error === null) {
       setIsSuccessVisible(true);
