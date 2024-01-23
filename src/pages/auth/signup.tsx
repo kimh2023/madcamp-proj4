@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { AuthDiv, BackGroundLayout } from "./login";
 import { formatDate } from "../../utils/formatDate";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/api/axiosInstance";
 import { SignUpDto } from "@/types/AuthDto";
 import { useState } from "react";
 

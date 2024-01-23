@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { formatDate } from "../../utils/formatDate";
 import { useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/api/axiosInstance";
 
 const LoginPage = () => {
   const router = useRouter();

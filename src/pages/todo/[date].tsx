@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import NotFound from "@/components/styledComponents/NotFound";
 import { useEffect, useReducer, useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/api/axiosInstance";
 import { Action, TodoItemDto } from "@/types/TodoDto";
 import {
   CalendarFilled,
@@ -103,6 +103,7 @@ const TodoPage = () => {
       {!place && <TodoCanvas setPlace={setPlace} />}
       {place && (
         <TodoPlaceCanvas
+          setPlace={setPlace}
           todoListState={todoListState}
           todoListDispatch={todoListDispatch}
         />
