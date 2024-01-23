@@ -15,6 +15,7 @@ import {
 import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
 import dayjs, { type Dayjs } from "dayjs";
 import TodoPlaceCanvas from "@/components/todoComponents/canvas/TodoPlaceCanvas";
+import TodoCanvas from "@/components/todoComponents/canvas/TodoCanvas";
 
 const defaultTodo: TodoItemDto = {
   id: 0,
@@ -99,19 +100,14 @@ const TodoPage = () => {
         todoListState={todoListState}
         todoListDispatch={todoListDispatch}
       />
-      {/* {!place && <TodoCanvas setPlace={setPlace} />}
+      {!place && <TodoCanvas setPlace={setPlace} />}
       {place && (
         <TodoPlaceCanvas
           setPlace={setPlace}
           todoListState={todoListState}
           todoListDispatch={todoListDispatch}
         />
-      )} */}
-      <TodoPlaceCanvas
-        setPlace={setPlace}
-        todoListState={todoListState}
-        todoListDispatch={todoListDispatch}
-      />
+      )}
       <Drawer
         width={600}
         open={isCalendarOpen}

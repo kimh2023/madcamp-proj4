@@ -3,7 +3,8 @@ import { PerspectiveCamera, useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { MeshProps, useFrame } from "@react-three/fiber";
 import { useAudio } from "@/utils/useAudio";
-import GoOutArrow from "./GoOutArrow";
+import GoOutArrow from "../TodoPlaceCanvas/GoOutArrow";
+import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
 
 interface RabbitProps extends MeshProps {
   isPlace: boolean;
@@ -54,16 +55,6 @@ const Rabbit = ({ isPlace, goOut, ...props }: RabbitProps) => {
     }
   });
 
-  useEffect(
-    () =>
-      model.scene.traverse((child) => {
-        if (child.isObject3D) {
-          child.castShadow == true;
-        }
-      }),
-    [],
-  );
-
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
   const handleResize = () => {
     setInnerWidth(window.innerWidth);
@@ -80,35 +71,27 @@ const Rabbit = ({ isPlace, goOut, ...props }: RabbitProps) => {
     <mesh ref={mesh} {...props} position={position} castShadow>
       {isPlace && (
         <React.Fragment>
-          <PerspectiveCamera
+          {/* <PerspectiveCamera
             makeDefault
             rotation={[-Math.PI / 2 + 0.8, 0, 0]}
             position={[0, 20, 25]}
+          /> */}
+          <PerspectiveCamera
+            makeDefault
+            rotation={[0.7, Math.PI, 0]}
+            position={[0, 16, -15]}
+            far={100}
           />
           <GoOutArrow
-            rotation={[+Math.PI / 2 - 0.8, 0.5, 0]}
-            position={[-innerWidth / 60, 0, -15]}
-            onPointerEnter={() => {
-              if (document.querySelector("body") !== null) {
-                (
-                  document.querySelector("body") as HTMLBodyElement
-                ).style.cursor = "var(--cursor-pointer) 8 2, pointer";
-              }
-            }}
-            onPointerLeave={() => {
-              if (document.querySelector("body") !== null) {
-                (
-                  document.querySelector("body") as HTMLBodyElement
-                ).style.cursor = "var(--cursor-auto) 8 2, auto";
-              }
-            }}
+            // rotation={[Math.PI / 2 + 0.8, 0.5, 0]}
+            // position={[-innerWidth / 60, 0, -15]}
+            rotation={[Math.PI / 2, -0.5, -0.5]}
+            position={[12, 3, 17]}
+            onPointerEnter={hoverEnter}
+            onPointerLeave={hoverLeave}
             onClick={() => {
               goOut && goOut();
-              if (document.querySelector("body") !== null) {
-                (
-                  document.querySelector("body") as HTMLBodyElement
-                ).style.cursor = "var(--cursor-auto) 8 2, auto";
-              }
+              hoverLeave();
             }}
           />
         </React.Fragment>
