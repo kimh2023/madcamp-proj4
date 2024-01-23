@@ -5,10 +5,11 @@ import React, {
   SetStateAction,
   Suspense,
   lazy,
+  useRef,
   useState,
 } from "react";
 import NotFound from "../../styledComponents/NotFound";
-import { Vector3 } from "three";
+import { BufferGeometry, Mesh, NormalBufferAttributes, Vector3 } from "three";
 import {
   Environment,
   OrbitControls,
@@ -17,6 +18,7 @@ import {
 import Road from "./models/Road";
 import School from "./models/School";
 import Terrain from "./models/Terrain";
+import House from "./models/House";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -25,6 +27,7 @@ const TodoCanvasInner = ({
 }: {
   setPlace: Dispatch<SetStateAction<string | undefined>>;
 }) => {
+  const mesh = useRef<Mesh<BufferGeometry<NormalBufferAttributes>>>(null);
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
   );
@@ -36,7 +39,15 @@ const TodoCanvasInner = ({
 
   return (
     <React.Fragment>
+      <PerspectiveCamera
+        makeDefault
+        position={
+          mesh?.current ? [10, 10, mesh.current.position.z + 10] : [10, 10, 10]
+        }
+      />
+
       <Rabbit
+        mesh={mesh}
         position={rabbitPosition}
         rotation={[0, 0, 0]}
         onClick={() => console.log("hi")}
@@ -64,6 +75,28 @@ const TodoCanvasInner = ({
           }
         }}
       />
+      <House
+        position={[-20, -1, 20]}
+        onPointerEnter={() => {
+          if (document.querySelector("body") !== null) {
+            (document.querySelector("body") as HTMLBodyElement).style.cursor =
+              "var(--cursor-pointer) 8 2, pointer";
+          }
+        }}
+        onPointerLeave={() => {
+          if (document.querySelector("body") !== null) {
+            (document.querySelector("body") as HTMLBodyElement).style.cursor =
+              "var(--cursor-auto) 8 2, auto";
+          }
+        }}
+        onClick={() => {
+          setPlace("house");
+          if (document.querySelector("body") !== null) {
+            (document.querySelector("body") as HTMLBodyElement).style.cursor =
+              "var(--cursor-auto) 8 2, auto";
+          }
+        }}
+      />
 
       <Terrain onClick={handleCanvasClick} />
     </React.Fragment>
@@ -84,7 +117,6 @@ const TodoCanvas = ({
           <directionalLight intensity={1} castShadow />
           <OrbitControls />
 
-          <PerspectiveCamera makeDefault position={[10, 10, 10]} />
           <TodoCanvasInner setPlace={setPlace} />
         </Canvas>
       </Suspense>

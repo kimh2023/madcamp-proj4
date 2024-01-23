@@ -1,8 +1,14 @@
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { Layout } from "antd";
-import React, { Dispatch, Suspense, lazy, useMemo, useState } from "react";
+import React, {
+  Dispatch,
+  Suspense,
+  lazy,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import NotFound from "../../styledComponents/NotFound";
-import { Vector3 } from "three";
 import {
   Environment,
   OrbitControls,
@@ -12,6 +18,7 @@ import { Action, TodoItemDto } from "@/types/TodoDto";
 import Todo from "./models/Todo";
 import Terrain from "./models/Terrain";
 import Arrow from "./models/Arrow";
+import { BufferGeometry, Mesh, NormalBufferAttributes, Vector3 } from "three";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -20,6 +27,7 @@ const TodoCanvasInner = ({
 }: {
   todoListState: TodoItemDto[];
 }) => {
+  const mesh = useRef<Mesh<BufferGeometry<NormalBufferAttributes>>>(null);
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
   );
@@ -43,6 +51,7 @@ const TodoCanvasInner = ({
   return (
     <React.Fragment>
       <Rabbit
+        mesh={mesh}
         position={rabbitPosition}
         rotation={[0, 0, 0]}
         onClick={() => console.log("hi")}

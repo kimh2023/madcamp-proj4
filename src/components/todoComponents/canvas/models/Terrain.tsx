@@ -6,7 +6,6 @@ const Terrain = ({ onClick }: { onClick: any }) => {
   texture.repeat.set(50, 50);
   texture.wrapS = RepeatWrapping;
   texture.wrapT = RepeatWrapping;
-  console.log(texture);
 
   return (
     <mesh

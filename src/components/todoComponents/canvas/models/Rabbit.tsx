@@ -1,17 +1,21 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { MeshProps, useFrame } from "@react-three/fiber";
 
-interface RabbitProps extends MeshProps {}
+interface RabbitProps extends MeshProps {
+  mesh: React.RefObject<
+    THREE.Mesh<
+      THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+      THREE.Material | THREE.Material[],
+      THREE.Object3DEventMap
+    >
+  >;
+}
 
-const Rabbit = ({ ...props }: RabbitProps) => {
-  const model = useGLTF(`${process.env.FRONTEND_URL}/models/rabbit8.glb`);
-  const mesh =
-    useRef<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>>>(
-      null,
-    );
-  const [animation, setAnimation] = useState("walk");
+const Rabbit = ({ mesh, ...props }: RabbitProps) => {
+  const model = useGLTF(`${process.env.FRONTEND_URL}/models/rabbit.glb`);
+  const [animation, setAnimation] = useState("");
   const position = useMemo(() => props.position, []);
   const { actions } = useAnimations(model.animations, mesh);
 
@@ -34,7 +38,8 @@ const Rabbit = ({ ...props }: RabbitProps) => {
         .multiplyScalar(0.1);
       mesh.current.position.sub(direction);
       mesh.current.lookAt(props.position as THREE.Vector3);
-      setAnimation("walk2");
+      setAnimation("walk");
+      console.log(actions);
     } else {
       setAnimation("");
     }
