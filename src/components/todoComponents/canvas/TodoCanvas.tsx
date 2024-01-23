@@ -1,5 +1,5 @@
 import { ThreeEvent } from "@react-three/fiber";
-import React, { Dispatch, SetStateAction, lazy, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, lazy, useState } from "react";
 import { Vector3 } from "three";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import Road from "./TodoCanvas/Road";
@@ -24,16 +24,6 @@ const TodoCanvas = ({
     const x = Math.max(-4.5, Math.min(4.5, event.point.x));
     setRabbitPosition(new Vector3(x, 0, event.point.z));
   };
-  const cameraRef = useRef(null);
-
-  const handleCameraChange = () => {
-    if (!cameraRef.current) {
-      return;
-    }
-    const { rotation, position } = cameraRef.current;
-    console.log("Current Camera Rotation:", rotation);
-    console.log("Current Camera Position:", position);
-  };
 
   return (
     <CanvasSettings>
@@ -41,9 +31,8 @@ const TodoCanvas = ({
         makeDefault
         rotation={[-0.15, 0.9, 0.15]}
         position={[37, 17, 33]}
-        ref={cameraRef}
       />
-      <OrbitControls onChange={handleCameraChange} />
+      <OrbitControls />
 
       <Rabbit
         isPlace={false}

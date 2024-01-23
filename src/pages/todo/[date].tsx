@@ -16,6 +16,7 @@ import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
 import dayjs, { type Dayjs } from "dayjs";
 import TodoPlaceCanvas from "@/components/todoComponents/canvas/TodoPlaceCanvas";
 import TodoCanvas from "@/components/todoComponents/canvas/TodoCanvas";
+import TodoGameCanvas from "@/components/todoComponents/canvas/TodoGameCanvas";
 
 const defaultTodo: TodoItemDto = {
   id: 0,
@@ -65,6 +66,7 @@ const TodoPage = () => {
   const router = useRouter();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [place, setPlace] = useState<string>();
+  const [chosenTodo, setChosenTodo] = useState<TodoItemDto>();
 
   useEffect(() => {
     const getTodoItems = async () => {
@@ -101,10 +103,16 @@ const TodoPage = () => {
         todoListDispatch={todoListDispatch}
       />
       {!place && <TodoCanvas setPlace={setPlace} />}
-      {place && (
+      {place && chosenTodo === undefined && (
         <TodoPlaceCanvas
           setPlace={setPlace}
           todoListState={todoListState}
+          setChosenTodo={(chosenTodo: TodoItemDto) => setChosenTodo(chosenTodo)}
+        />
+      )}
+      {place && chosenTodo !== undefined && (
+        <TodoGameCanvas
+          chosenTodo={chosenTodo}
           todoListDispatch={todoListDispatch}
         />
       )}

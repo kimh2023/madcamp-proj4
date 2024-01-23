@@ -7,8 +7,8 @@ import React, {
   useState,
 } from "react";
 import { Vector3 } from "three";
-import { Action, TodoItemDto } from "@/types/TodoDto";
-import Todo from "./TodoCanvas/Todo";
+import { TodoItemDto } from "@/types/TodoDto";
+import Todo from "./TodoPlaceCanvas/Todo";
 import Terrain from "./terrain/Terrain";
 import Stickers from "./terrain/Stickers";
 import Arrow from "./terrain/Arrow";
@@ -18,12 +18,12 @@ const Rabbit = lazy(() => import("./models/Rabbit"));
 
 const TodoPlaceCanvas = ({
   todoListState,
-  todoListDispatch,
   setPlace,
+  setChosenTodo,
 }: {
   todoListState: TodoItemDto[];
-  todoListDispatch: Dispatch<Action>;
   setPlace: Dispatch<SetStateAction<string | undefined>>;
+  setChosenTodo: (chosenTodo: TodoItemDto) => void;
 }) => {
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
@@ -61,6 +61,7 @@ const TodoPlaceCanvas = ({
             key={index}
             index={index + 1}
             todoItem={todoItem}
+            setChosenTodo={setChosenTodo}
             position={[(index + 1) * 30, 0, 40 * ((index + 1) % 2)]}
           />
         ))}
