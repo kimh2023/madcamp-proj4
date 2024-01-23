@@ -14,6 +14,7 @@ import { Environment } from "@react-three/drei";
 import { Action, TodoItemDto } from "@/types/TodoDto";
 import Todo from "./models/Todo";
 import Terrain from "./models/Terrain";
+import Stickers from "./models/Stickers";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -57,11 +58,14 @@ const TodoCanvasInner = ({
         <Todo
           key={index}
           index={index}
+          todoItem={todoItem}
           position={[index * 30, 0, 40 * (index % 2)]}
+          rotation={[0, 0, 0]}
         />
       ))}
 
       <Terrain onClick={handleCanvasClick} />
+      <Stickers />
     </React.Fragment>
   );
 };
@@ -79,7 +83,7 @@ const TodoPlaceCanvas = ({
     <Layout.Content>
       <Suspense fallback={<NotFound />}>
         <Canvas shadows>
-          <Environment preset="sunset" />
+          <Environment preset="dawn" />
           {/* <ambientLight intensity={1} /> */}
           <directionalLight intensity={1} castShadow />
           {/* <OrbitControls /> */}
