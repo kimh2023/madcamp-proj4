@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import NotFound from "../../styledComponents/NotFound";
-import { BufferGeometry, Mesh, NormalBufferAttributes, Vector3 } from "three";
+import { Vector3 } from "three";
 import {
   Environment,
   OrbitControls,
@@ -27,7 +27,6 @@ const TodoCanvasInner = ({
 }: {
   setPlace: Dispatch<SetStateAction<string | undefined>>;
 }) => {
-  const mesh = useRef<Mesh<BufferGeometry<NormalBufferAttributes>>>(null);
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
   );
@@ -36,25 +35,36 @@ const TodoCanvasInner = ({
     const x = Math.max(-4.5, Math.min(4.5, event.point.x));
     setRabbitPosition(new Vector3(x, 0, event.point.z));
   };
+  const cameraRef = useRef(null);
+
+  const handleCameraChange = () => {
+    if (!cameraRef.current) {
+      return;
+    }
+    const { rotation, position } = cameraRef.current;
+    console.log("Current Camera Rotation:", rotation);
+    console.log("Current Camera Position:", position);
+  };
 
   return (
     <React.Fragment>
       <PerspectiveCamera
         makeDefault
-        position={
-          mesh?.current ? [10, 10, mesh.current.position.z + 10] : [10, 10, 10]
-        }
+        rotation={[-0.15, 0.9, 0.15]}
+        position={[37, 17, 33]}
+        ref={cameraRef}
       />
+      <OrbitControls onChange={handleCameraChange} />
 
       <Rabbit
-        mesh={mesh}
+        isPlace={false}
         position={rabbitPosition}
         rotation={[0, 0, 0]}
         onClick={() => console.log("hi")}
       />
       <Road />
       <School
-        position={[-20, -1, 0]}
+        position={[-16, -1, -25]}
         onPointerEnter={() => {
           if (document.querySelector("body") !== null) {
             (document.querySelector("body") as HTMLBodyElement).style.cursor =
@@ -76,7 +86,7 @@ const TodoCanvasInner = ({
         }}
       />
       <House
-        position={[-20, -1, 20]}
+        position={[-20, -1, 10]}
         onPointerEnter={() => {
           if (document.querySelector("body") !== null) {
             (document.querySelector("body") as HTMLBodyElement).style.cursor =
@@ -115,7 +125,7 @@ const TodoCanvas = ({
           <Environment preset="sunset" />
           {/* <ambientLight intensity={1} /> */}
           <directionalLight intensity={1} castShadow />
-          <OrbitControls />
+          {/* <OrbitControls /> */}
 
           <TodoCanvasInner setPlace={setPlace} />
         </Canvas>

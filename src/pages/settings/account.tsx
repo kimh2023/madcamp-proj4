@@ -3,7 +3,7 @@
 import MainLayout from "@/components/settingsComponents/MainLayout";
 import ChangePassword from "@/components/settingsComponents/account/ChangePassword";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/api/axiosInstance";
 
 import { Form } from "antd";
 import { useRouter } from "next/router";

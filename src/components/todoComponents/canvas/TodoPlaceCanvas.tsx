@@ -2,32 +2,28 @@ import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { Layout } from "antd";
 import React, {
   Dispatch,
+  SetStateAction,
   Suspense,
   lazy,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import NotFound from "../../styledComponents/NotFound";
-import {
-  Environment,
-  OrbitControls,
-  PerspectiveCamera,
-} from "@react-three/drei";
+import { Vector3 } from "three";
+import { Environment } from "@react-three/drei";
 import { Action, TodoItemDto } from "@/types/TodoDto";
 import Todo from "./models/Todo";
 import Terrain from "./models/Terrain";
-import Arrow from "./models/Arrow";
-import { BufferGeometry, Mesh, NormalBufferAttributes, Vector3 } from "three";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
 const TodoCanvasInner = ({
   todoListState,
+  setPlace,
 }: {
   todoListState: TodoItemDto[];
+  setPlace: Dispatch<SetStateAction<string | undefined>>;
 }) => {
-  const mesh = useRef<Mesh<BufferGeometry<NormalBufferAttributes>>>(null);
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
   );
@@ -51,25 +47,31 @@ const TodoCanvasInner = ({
   return (
     <React.Fragment>
       <Rabbit
-        mesh={mesh}
+        isPlace={true}
+        goOut={() => setPlace(undefined)}
         position={rabbitPosition}
         rotation={[0, 0, 0]}
         onClick={() => console.log("hi")}
       />
       {todoListState.map((todoItem, index) => (
-        <Todo key={index} position={[index * 20, 0, 20 * (index % 2)]} />
+        <Todo
+          key={index}
+          index={index}
+          position={[index * 30, 0, 40 * (index % 2)]}
+        />
       ))}
 
       <Terrain onClick={handleCanvasClick} />
-      <Arrow />
     </React.Fragment>
   );
 };
 
 const TodoPlaceCanvas = ({
+  setPlace,
   todoListState,
   todoListDispatch,
 }: {
+  setPlace: Dispatch<SetStateAction<string | undefined>>;
   todoListState: TodoItemDto[];
   todoListDispatch: Dispatch<Action>;
 }) => {
@@ -80,10 +82,10 @@ const TodoPlaceCanvas = ({
           <Environment preset="sunset" />
           {/* <ambientLight intensity={1} /> */}
           <directionalLight intensity={1} castShadow />
-          <OrbitControls />
+          {/* <OrbitControls /> */}
 
-          <PerspectiveCamera makeDefault position={[10, 10, 10]} />
-          <TodoCanvasInner todoListState={todoListState} />
+          {/* <PerspectiveCamera makeDefault position={[10, 10, 10]} /> */}
+          <TodoCanvasInner setPlace={setPlace} todoListState={todoListState} />
         </Canvas>
       </Suspense>
     </Layout.Content>

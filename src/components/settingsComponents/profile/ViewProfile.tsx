@@ -1,7 +1,7 @@
 "use client";
 
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/api/axiosInstance";
 import { EditFilled, MailOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Alert,

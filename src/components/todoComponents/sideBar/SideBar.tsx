@@ -8,7 +8,7 @@ import CheckBoxNoEdit from "./CheckBoxNoEdit";
 import { EditFilled, PlusOutlined, SaveFilled } from "@ant-design/icons";
 import NotFound from "../../styledComponents/NotFound";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/api/axiosInstance";
 import { useRouter } from "next/router";
 import { getDate } from "@/utils/formatDate";
 
