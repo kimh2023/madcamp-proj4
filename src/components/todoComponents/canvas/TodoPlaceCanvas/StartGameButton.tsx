@@ -49,7 +49,7 @@ const StartGameButton = ({ setChosenTodo }: { setChosenTodo: () => void }) => {
         <Center>
           <Text3D
             font={style.START_FONT}
-            letterSpacing={0.9}
+            letterSpacing={0.8}
             size={0.7}
             height={buttonThickness / 3}
           >

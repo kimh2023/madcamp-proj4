@@ -35,7 +35,7 @@ const CompleteMessage = () => {
   }, []);
 
   return (
-    <group position={[-4.3, 7, 0]} rotation={[0, Math.PI / 2, 0]}>
+    <group position={[0, 8, -2]} rotation={[-0.2, 0, 0]}>
       <mesh>
         <Center>
           <Text3D font={style.START_FONT} letterSpacing={0.95} size={0.8}>
