@@ -19,9 +19,7 @@ const RabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
   }, [animation]);
   console.log(animation);
 
-  const { scene, animations } = useGLTF(
-    `${process.env.FRONTEND_URL}/models/${loadedAnimation}`,
-  );
+  const { scene, animations } = useGLTF(`/models/${loadedAnimation}`);
 
   return (
     <Clone

@@ -3,7 +3,7 @@ import React from "react";
 import { DoubleSide } from "three";
 
 const Arrow = ({ index }: { index: number }) => {
-  const texture = useTexture(`${process.env.FRONTEND_URL}/images/arrow.png`);
+  const texture = useTexture(`/images/arrow.png`);
   texture.repeat.set(1, 1);
 
   const arrowCount = 8;

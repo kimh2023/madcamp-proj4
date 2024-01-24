@@ -182,7 +182,7 @@ const SideBarImageContainer = styled.div`
   overflow: scroll;
   overflow-x: hidden;
 
-  background-image: url(${process.env.FRONTEND_URL}/images/sidebar.png);
+  background-image: url(/images/sidebar.png);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
