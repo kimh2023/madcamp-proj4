@@ -1,28 +1,29 @@
-import { Canvas, ThreeEvent } from "@react-three/fiber";
-import { Layout } from "antd";
+import { ThreeEvent } from "@react-three/fiber";
 import React, {
   Dispatch,
   SetStateAction,
-  Suspense,
   lazy,
   useMemo,
   useState,
 } from "react";
-import NotFound from "../../styledComponents/NotFound";
 import { Vector3 } from "three";
-import { Environment } from "@react-three/drei";
-import { Action, TodoItemDto } from "@/types/TodoDto";
-import Todo from "./models/Todo";
-import Terrain from "./models/Terrain";
+import { TodoItemDto } from "@/types/TodoDto";
+import Todo from "./TodoPlaceCanvas/Todo";
+import Terrain from "./terrain/Terrain";
+import Stickers from "./terrain/Stickers";
+import Arrow from "./terrain/Arrow";
+import CanvasSettings from "./CanvasSettings";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
-const TodoCanvasInner = ({
+const TodoPlaceCanvas = ({
   todoListState,
   setPlace,
+  setChosenTodo,
 }: {
   todoListState: TodoItemDto[];
   setPlace: Dispatch<SetStateAction<string | undefined>>;
+  setChosenTodo: (chosenTodo: TodoItemDto) => void;
 }) => {
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
     new Vector3(0, 0, 0),
@@ -31,11 +32,7 @@ const TodoCanvasInner = ({
     () =>
       todoListState.filter(
         (todoItem) => todoItem.completed_in_progress !== "COMPLETE",
-      ).length > 0
-        ? todoListState.filter(
-            (todoItem) => todoItem.completed_in_progress !== "COMPLETE",
-          )[0]
-        : null,
+      ),
     [todoListState],
   );
   console.log(currentTodo);
@@ -45,7 +42,7 @@ const TodoCanvasInner = ({
   };
 
   return (
-    <React.Fragment>
+    <CanvasSettings>
       <Rabbit
         isPlace={true}
         goOut={() => setPlace(undefined)}
@@ -53,42 +50,25 @@ const TodoCanvasInner = ({
         rotation={[0, 0, 0]}
         onClick={() => console.log("hi")}
       />
-      {todoListState.map((todoItem, index) => (
-        <Todo
-          key={index}
-          index={index}
-          position={[index * 30, 0, 40 * (index % 2)]}
-        />
-      ))}
-
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[6, 6, 0.5, 64]} />
+        <meshBasicMaterial color={"#F68C9C"} />
+      </mesh>
+      <Arrow index={0} />
+      <>
+        {currentTodo.map((todoItem, index) => (
+          <Todo
+            key={index}
+            index={index + 1}
+            todoItem={todoItem}
+            setChosenTodo={setChosenTodo}
+            position={[(index + 1) * 30, 0, 40 * ((index + 1) % 2)]}
+          />
+        ))}
+      </>
       <Terrain onClick={handleCanvasClick} />
-    </React.Fragment>
-  );
-};
-
-const TodoPlaceCanvas = ({
-  setPlace,
-  todoListState,
-  todoListDispatch,
-}: {
-  setPlace: Dispatch<SetStateAction<string | undefined>>;
-  todoListState: TodoItemDto[];
-  todoListDispatch: Dispatch<Action>;
-}) => {
-  return (
-    <Layout.Content>
-      <Suspense fallback={<NotFound />}>
-        <Canvas shadows>
-          <Environment preset="sunset" />
-          {/* <ambientLight intensity={1} /> */}
-          <directionalLight intensity={1} castShadow />
-          {/* <OrbitControls /> */}
-
-          {/* <PerspectiveCamera makeDefault position={[10, 10, 10]} /> */}
-          <TodoCanvasInner setPlace={setPlace} todoListState={todoListState} />
-        </Canvas>
-      </Suspense>
-    </Layout.Content>
+      <Stickers />
+    </CanvasSettings>
   );
 };
 

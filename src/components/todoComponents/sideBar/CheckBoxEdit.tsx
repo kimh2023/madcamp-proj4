@@ -96,6 +96,7 @@ const CheckBoxEdit = ({
         options={animationOptions}
         value={todoItem.animation}
         onChange={(value: string) => setTodoItemState({ animation: value })}
+        style={{ minWidth: "105px" }}
       />
       <Radio.Group
         defaultValue={todoItem.place}
@@ -150,4 +151,5 @@ const TodoContainer = styled.div`
 const animationOptions = [
   { value: "STUDY", label: "STUDY" },
   { value: "CLEAN", label: "CLEAN" },
+  { value: "EXERCISE", label: "EXERCISE" },
 ];
