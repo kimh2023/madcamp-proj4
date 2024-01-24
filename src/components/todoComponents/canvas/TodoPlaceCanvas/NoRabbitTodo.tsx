@@ -25,7 +25,7 @@ const NoRabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
   }, [animation]);
   console.log(animation);
 
-  const { scene, animations } = useGLTF(`/models/norabbit/${loadedAnimation}`);
+  const { scene } = useGLTF(`/models/norabbit/${loadedAnimation}`);
 
   return <Clone object={scene} {...props} />;
 };
