@@ -3,21 +3,11 @@ import React from "react";
 import { DoubleSide, Vector3 } from "three";
 
 const Stickers = () => {
-  const texture1 = useTexture(
-    `${process.env.FRONTEND_URL}/images/stickers/sticker-1.png`,
-  );
-  const texture2 = useTexture(
-    `${process.env.FRONTEND_URL}/images/stickers/sticker-2.png`,
-  );
-  const texture3 = useTexture(
-    `${process.env.FRONTEND_URL}/images/stickers/sticker-3.png`,
-  );
-  const texture4 = useTexture(
-    `${process.env.FRONTEND_URL}/images/stickers/sticker-4.png`,
-  );
-  const texture5 = useTexture(
-    `${process.env.FRONTEND_URL}/images/stickers/sticker-5.png`,
-  );
+  const texture1 = useTexture(`/images/stickers/sticker-1.png`);
+  const texture2 = useTexture(`/images/stickers/sticker-2.png`);
+  const texture3 = useTexture(`/images/stickers/sticker-3.png`);
+  const texture4 = useTexture(`/images/stickers/sticker-4.png`);
+  const texture5 = useTexture(`/images/stickers/sticker-5.png`);
   const allTextures = [texture1, texture2, texture3, texture4, texture5];
 
   allTextures.forEach((texture) => {

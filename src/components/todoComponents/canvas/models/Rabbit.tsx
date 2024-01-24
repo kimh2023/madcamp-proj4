@@ -12,7 +12,7 @@ interface RabbitProps extends MeshProps {
 }
 
 const Rabbit = ({ isPlace, goOut, ...props }: RabbitProps) => {
-  const model = useGLTF(`${process.env.FRONTEND_URL}/models/rabbit.glb`);
+  const model = useGLTF(`/models/rabbit.glb`);
   const mesh =
     useRef<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>>>(
       null,

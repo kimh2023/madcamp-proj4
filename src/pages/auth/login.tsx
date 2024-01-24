@@ -112,7 +112,7 @@ const LoginPage = () => {
 export default LoginPage;
 
 export const BackGroundLayout = styled(Layout)`
-  background-image: url(${process.env.FRONTEND_URL}/images/paper.jpg);
+  background-image: url(/images/paper.jpg);
   background-size: 400px 400px;
   background-repeat: repeat;
   min-height: 100vh;

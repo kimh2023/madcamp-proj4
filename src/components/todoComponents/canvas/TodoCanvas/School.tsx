@@ -5,7 +5,7 @@ import { MeshProps } from "@react-three/fiber";
 interface SchoolProps extends MeshProps {}
 
 const School = ({ ...props }: SchoolProps) => {
-  const model = useGLTF(`${process.env.FRONTEND_URL}/models/school.glb`);
+  const model = useGLTF(`/models/school.glb`);
 
   return (
     <mesh {...props} castShadow>

@@ -5,7 +5,7 @@ import { MeshProps } from "@react-three/fiber";
 interface GoOutArrowProps extends MeshProps {}
 
 const GoOutArrow = ({ ...props }: GoOutArrowProps) => {
-  const model = useGLTF(`${process.env.FRONTEND_URL}/models/arrow.glb`);
+  const model = useGLTF(`/models/arrow.glb`);
 
   return (
     <mesh {...props} castShadow>

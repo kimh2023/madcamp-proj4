@@ -2,7 +2,7 @@ import { useTexture } from "@react-three/drei";
 import { DoubleSide, RepeatWrapping } from "three";
 
 const Terrain = ({ onClick }: { onClick?: any }) => {
-  const texture = useTexture(`${process.env.FRONTEND_URL}/images/paper.jpg`);
+  const texture = useTexture(`/images/paper.jpg`);
   texture.repeat.set(50, 50);
   texture.wrapS = RepeatWrapping;
   texture.wrapT = RepeatWrapping;
