@@ -117,6 +117,7 @@ const TodoPage = () => {
           {!place && <TodoCanvas setPlace={setPlace} />}
           {place && chosenTodo === undefined && (
             <TodoPlaceCanvas
+              place={place}
               setPlace={setPlace}
               todoListState={todoListState}
               setChosenTodo={(chosenTodo: TodoItemDto) =>

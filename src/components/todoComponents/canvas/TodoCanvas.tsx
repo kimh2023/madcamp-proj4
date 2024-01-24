@@ -1,5 +1,5 @@
 import { ThreeEvent } from "@react-three/fiber";
-import React, { Dispatch, SetStateAction, lazy, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Vector3 } from "three";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import Road from "./TodoCanvas/Road";
@@ -7,8 +7,7 @@ import School from "./TodoCanvas/School";
 import Terrain from "./terrain/Terrain";
 import House from "./TodoCanvas/House";
 import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
-
-const Rabbit = lazy(() => import("./models/Rabbit"));
+import Rabbit from "./models/Rabbit";
 
 const TodoCanvas = ({
   setPlace,
@@ -29,18 +28,23 @@ const TodoCanvas = ({
       <PerspectiveCamera
         makeDefault
         rotation={[-0.15, 0.9, 0.15]}
-        position={[37, 17, 33]}
+        position={[30, 15, 27]}
       />
       <OrbitControls />
 
-      <Rabbit isPlace={false} position={rabbitPosition} rotation={[0, 0, 0]} />
+      <Rabbit
+        isPlace={false}
+        isMain={true}
+        position={rabbitPosition}
+        rotation={[0, 0, 0]}
+      />
       <Road />
       <School
         position={[-16, -1, -25]}
         onPointerEnter={hoverEnter}
         onPointerLeave={hoverLeave}
         onClick={() => {
-          setPlace("school");
+          setPlace("SCHOOL");
           hoverLeave();
         }}
       />
@@ -49,7 +53,7 @@ const TodoCanvas = ({
         onPointerEnter={hoverEnter}
         onPointerLeave={hoverLeave}
         onClick={() => {
-          setPlace("house");
+          setPlace("HOME");
           hoverLeave();
         }}
       />
