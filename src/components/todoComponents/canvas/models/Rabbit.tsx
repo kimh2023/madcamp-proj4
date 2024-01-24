@@ -6,14 +6,20 @@ import { useAudio } from "@/utils/useAudio";
 import GoOutArrow from "../TodoPlaceCanvas/GoOutArrow";
 import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
 import { SkeletonUtils } from "three-stdlib";
+import { io } from "socket.io-client";
 
 interface RabbitProps extends GroupProps {
-  isPlace: boolean;
+  place?: string;
   isMain?: boolean;
   goOut?: () => void;
 }
 
-const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
+const socket = io(
+  process.env.BACKEND_URL ? process.env.BACKEND_URL : "http://localhost:3000",
+  { withCredentials: true },
+);
+
+const Rabbit = ({ place, isMain, goOut, ...props }: RabbitProps) => {
   const group = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
   const { scene, materials, animations } = useGLTF("/models/rabbit/rabbit.glb");
   const { actions } = useAnimations(animations, group);
@@ -49,6 +55,15 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
       group.current.position.sub(direction);
       group.current.lookAt(props.position as THREE.Vector3);
       console.log("DIRECTION", group.current.getWorldDirection(direction));
+      socket.emit("location", {
+        position: group.current.position,
+        direction: {
+          x: group.current.getWorldDirection(direction).x,
+          y: 0,
+          z: group.current.getWorldDirection(direction).z,
+        },
+        place: place ? place : "MAIN",
+      });
 
       setAnimation("walk");
       if (!playing) {
@@ -84,7 +99,7 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
 
   return (
     <group ref={group} {...props} position={position} dispose={null}>
-      {isPlace && isMain && (
+      {place !== undefined && isMain && (
         <React.Fragment>
           {/* <PerspectiveCamera
             makeDefault

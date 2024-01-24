@@ -105,6 +105,7 @@ const TodoPage = () => {
   if (typeof router.query.date !== "string" || todoListState === undefined) {
     return <NotFound></NotFound>;
   }
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {contextHolder}

@@ -38,7 +38,7 @@ const TodoPlaceCanvas = ({
   return (
     <React.Fragment>
       <Rabbit
-        isPlace={true}
+        place={place}
         isMain={true}
         goOut={() => setPlace(undefined)}
         position={rabbitPosition}
@@ -46,7 +46,7 @@ const TodoPlaceCanvas = ({
         onClick={() => console.log("hi")}
       />
       <Rabbit
-        isPlace={true}
+        place={place}
         goOut={() => setPlace(undefined)}
         position={[0, 0, 0]}
         rotation={[0, 0, 0]}
