@@ -32,7 +32,6 @@ const SideBar = ({
         axiosInstance.delete(`/todos/${id}`),
       );
       success = error === null;
-      console.log(data, error);
     }
     if (success) {
       todoListDispatch({ type: "delete", id: id });

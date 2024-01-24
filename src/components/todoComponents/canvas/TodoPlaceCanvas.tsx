@@ -34,7 +34,6 @@ const TodoPlaceCanvas = ({
       ),
     [todoListState],
   );
-  console.log(currentTodo);
 
   const handleCanvasClick = (event: ThreeEvent<MouseEvent>) => {
     setRabbitPosition(new Vector3(event.point.x, 0, event.point.z));
@@ -47,7 +46,6 @@ const TodoPlaceCanvas = ({
         goOut={() => setPlace(undefined)}
         position={rabbitPosition}
         rotation={[0, 0, 0]}
-        onClick={() => console.log("hi")}
       />
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[6, 6, 0.5, 64]} />

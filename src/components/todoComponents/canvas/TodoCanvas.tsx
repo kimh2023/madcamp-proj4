@@ -33,12 +33,7 @@ const TodoCanvas = ({
       />
       <OrbitControls />
 
-      <Rabbit
-        isPlace={false}
-        position={rabbitPosition}
-        rotation={[0, 0, 0]}
-        onClick={() => console.log("hi")}
-      />
+      <Rabbit isPlace={false} position={rabbitPosition} rotation={[0, 0, 0]} />
       <Road />
       <School
         position={[-16, -1, -25]}

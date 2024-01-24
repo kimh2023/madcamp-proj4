@@ -12,7 +12,7 @@ interface RabbitProps extends MeshProps {
 }
 
 const Rabbit = ({ isPlace, goOut, ...props }: RabbitProps) => {
-  const model = useGLTF(`/models/rabbit.glb`);
+  const model = useGLTF(`/models/rabbit/rabbit.glb`);
   const mesh =
     useRef<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>>>(
       null,
@@ -43,7 +43,6 @@ const Rabbit = ({ isPlace, goOut, ...props }: RabbitProps) => {
       mesh.current.position.sub(direction);
       mesh.current.lookAt(props.position as THREE.Vector3);
       setAnimation("walk");
-      // console.log(actions);
       if (!playing) {
         toggle();
       }

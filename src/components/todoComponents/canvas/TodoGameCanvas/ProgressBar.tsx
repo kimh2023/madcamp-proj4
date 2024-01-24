@@ -11,7 +11,7 @@ const ProgressBar = ({ progress }: { progress: number }) => {
   const progressBarWidth = boxWidth * progress;
 
   return (
-    <group position={[-4.3, 7, 0]} rotation={[0, Math.PI / 2, 0]}>
+    <group position={[0, 9, -2]} rotation={[-0.2, 0, 0]}>
       <mesh>
         <RoundedBox args={[HPLength, HPThickness, 0.2]} radius={0.1}>
           <meshStandardMaterial attach="material" color={style.LIGHT_GREY} />

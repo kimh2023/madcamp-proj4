@@ -96,7 +96,7 @@ const CheckBoxEdit = ({
         options={animationOptions}
         value={todoItem.animation}
         onChange={(value: string) => setTodoItemState({ animation: value })}
-        style={{ minWidth: "105px" }}
+        // style={{ minWidth: "105px" }}
       />
       <Radio.Group
         defaultValue={todoItem.place}
@@ -149,7 +149,9 @@ const TodoContainer = styled.div`
 `;
 
 const animationOptions = [
-  { value: "STUDY", label: "STUDY" },
-  { value: "CLEAN", label: "CLEAN" },
-  { value: "EXERCISE", label: "EXERCISE" },
+  { value: "STUDY", label: "공부" },
+  { value: "HOMEWORK", label: "과제" },
+  { value: "CLEAN", label: "청소" },
+  { value: "WASH", label: "빨래" },
+  { value: "EXERCISE", label: "운동" },
 ];

@@ -10,14 +10,22 @@ const NoRabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
   const loadedAnimation = useMemo(() => {
     switch (animation) {
       case "EXERCISE":
-        return "no-rabbit-exercising.glb";
+        return "exercise.glb";
+      case "STUDY":
+        return "study.glb";
+      case "CLEAN":
+        return "clean.glb";
+      case "WASH":
+        return "wash.glb";
+      case "HOMEWORK":
+        return "homework.glb";
       default:
         return "rabbit.glb";
     }
   }, [animation]);
   console.log(animation);
 
-  const { scene, animations } = useGLTF(`/models/${loadedAnimation}`);
+  const { scene, animations } = useGLTF(`/models/norabbit/${loadedAnimation}`);
 
   return <Clone object={scene} {...props} />;
 };

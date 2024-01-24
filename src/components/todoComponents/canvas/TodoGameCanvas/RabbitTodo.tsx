@@ -17,15 +17,46 @@ const RabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
     switch (animation) {
       case "EXERCISE":
         return {
-          file: "rabbit-exercising.glb",
+          file: "exercise.glb",
           animation: ["Cylinder.003Action", "CylinderAction", "metarigAction"],
+          position: new THREE.Vector3(0, 1.5, 1),
+        };
+      case "STUDY":
+        return {
+          file: "study.glb",
+          animation: ["metarigAction", "lidAction"],
+          position: new THREE.Vector3(0, 2, 3),
+        };
+      case "CLEAN":
+        return {
+          file: "clean.glb",
+          animation: ["microfiber-mopAction.031", "study.002", "TriggerAction"],
+          position: new THREE.Vector3(0, 2, 2),
+        };
+      case "WASH":
+        return {
+          file: "wash.glb",
+          animation: ["study.001"],
+          position: new THREE.Vector3(0, 1.5, 1.5),
+        };
+      case "HOMEWORK":
+        return {
+          file: "homework.glb",
+          animation: ["study.001"],
+          position: new THREE.Vector3(0, -1, -1),
         };
       default:
-        return { file: "rabbit.glb", animation: ["walk"] };
+        return {
+          file: "rabbit.glb",
+          animation: ["walk"],
+          position: new THREE.Vector3(0, 0, 0),
+        };
     }
   }, [animation]);
 
-  const { scene, animations } = useGLTF(`/models/${loadedAnimation.file}`);
+  const { scene, animations } = useGLTF(
+    `/models/rabbit/${loadedAnimation.file}`,
+  );
   const { actions } = useAnimations(animations, mesh);
   console.log(actions);
 
@@ -53,6 +84,7 @@ const RabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
       {...props}
       onPointerOver={hoverEnter}
       onPointerLeave={hoverLeave}
+      position={loadedAnimation.position}
     >
       <primitive object={scene} />
     </mesh>
