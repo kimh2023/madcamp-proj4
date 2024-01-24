@@ -13,14 +13,14 @@ export function Carrot({ scale, ...props }: CarrotProps) {
       <mesh
         castShadow
         receiveShadow
-        geometry={nodes.Cylinder.geometry}
+        geometry={(nodes.Cylinder as any).geometry}
         material={materials.Material}
         scale={[scale, scale, scale]}
       />
       <mesh
         castShadow
         receiveShadow
-        geometry={nodes.Cylinder001.geometry}
+        geometry={(nodes.Cylinder001 as any).geometry}
         material={materials["Material.001"]}
         position={[-0.025, 2.307 * scale, -0.122]}
         rotation={[-0.495, 0, 0]}
@@ -29,7 +29,7 @@ export function Carrot({ scale, ...props }: CarrotProps) {
       <mesh
         castShadow
         receiveShadow
-        geometry={nodes.Cylinder003.geometry}
+        geometry={(nodes.Cylinder003 as any).geometry}
         material={materials["Material.001"]}
         position={[-0.146, 2.307 * scale, 0.068]}
         rotation={[-2.318, 0.867, 2.453]}
