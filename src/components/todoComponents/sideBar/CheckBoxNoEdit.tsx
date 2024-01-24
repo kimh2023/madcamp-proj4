@@ -31,7 +31,7 @@ const CheckBoxNoEdit = ({ todoItem }: { todoItem: TodoItemDto }) => {
           style={{ fontSize: "1.3rem" }}
         />
       )}
-      <Typography.Text style={{ flexShrink: 0 }}>
+      <Typography.Text ellipsis>
         {todoItem.task ? todoItem.task : "이건 오늘 해야지!"}
       </Typography.Text>
       {todoItem.place == "HOME" ? (
@@ -48,4 +48,5 @@ const TodoContainer = styled.div`
   display: flex;
   align-items: center;
   column-gap: 15px;
+  width: 100%;
 `;

@@ -1,33 +1,61 @@
-import React, { useMemo } from "react";
-import { Clone, useGLTF } from "@react-three/drei";
-import { GroupProps } from "@react-three/fiber";
+import React, { useEffect, useMemo, useRef } from "react";
+import { useAnimations, useGLTF } from "@react-three/drei";
+import { MeshProps } from "@react-three/fiber";
 import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
+import * as THREE from "three";
 
-interface NoRabbitTodoProps extends GroupProps {
+interface NoRabbitTodoProps extends MeshProps {
   animation: string;
-  // onClick:
 }
 
 const RabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
+  const mesh =
+    useRef<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>>>(
+      null,
+    );
   const loadedAnimation = useMemo(() => {
     switch (animation) {
       case "EXERCISE":
-        return "rabbit-exercising.glb";
+        return {
+          file: "rabbit-exercising.glb",
+          animation: ["Cylinder.003Action", "CylinderAction", "metarigAction"],
+        };
       default:
-        return "rabbit.glb";
+        return { file: "rabbit.glb", animation: ["walk"] };
     }
   }, [animation]);
-  console.log(animation);
 
-  const { scene, animations } = useGLTF(`/models/${loadedAnimation}`);
+  const { scene, animations } = useGLTF(`/models/${loadedAnimation.file}`);
+  const { actions } = useAnimations(animations, mesh);
+  console.log(actions);
+
+  useEffect(() => {
+    loadedAnimation.animation.forEach((animationKey) => {
+      actions[animationKey]?.reset().fadeIn(0.1).play();
+    });
+    return (): void => {
+      loadedAnimation.animation.forEach((animationKey) => {
+        actions[animationKey]?.fadeOut(0.5);
+      });
+    };
+  }, [loadedAnimation.animation, actions]);
 
   return (
-    <Clone
-      object={scene}
+    // <Clone
+    //   ref={mesh}
+    //   object={scene}
+    //   {...props}
+    //   onPointerOver={hoverEnter}
+    //   onPointerLeave={hoverLeave}
+    // />
+    <mesh
+      ref={mesh}
       {...props}
       onPointerOver={hoverEnter}
       onPointerLeave={hoverLeave}
-    />
+    >
+      <primitive object={scene} />
+    </mesh>
   );
 };
 
