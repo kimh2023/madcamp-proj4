@@ -32,10 +32,10 @@ MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   return {
     ...initialProps,
     styles: (
-      <>
+      <React.Fragment>
         {initialProps.styles}
         <style dangerouslySetInnerHTML={{ __html: style }} />
-      </>
+      </React.Fragment>
     ),
   };
 };

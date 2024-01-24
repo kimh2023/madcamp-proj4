@@ -7,7 +7,6 @@ import School from "./TodoCanvas/School";
 import Terrain from "./terrain/Terrain";
 import House from "./TodoCanvas/House";
 import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
-import CanvasSettings from "./CanvasSettings";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -26,7 +25,7 @@ const TodoCanvas = ({
   };
 
   return (
-    <CanvasSettings>
+    <React.Fragment>
       <PerspectiveCamera
         makeDefault
         rotation={[-0.15, 0.9, 0.15]}
@@ -61,7 +60,7 @@ const TodoCanvas = ({
       />
 
       <Terrain onClick={handleCanvasClick} />
-    </CanvasSettings>
+    </React.Fragment>
   );
 };
 

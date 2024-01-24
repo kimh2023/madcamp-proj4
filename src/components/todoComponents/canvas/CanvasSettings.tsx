@@ -6,13 +6,16 @@ import { JSXElementConstructor, ReactElement, Suspense } from "react";
 
 const CanvasSettings = ({
   children,
+  contextHolder,
 }: {
   children:
     | ReactElement<any, string | JSXElementConstructor<any>>
     | ReactElement<any, string | JSXElementConstructor<any>>[];
+  contextHolder?: ReactElement<any, string | JSXElementConstructor<any>>;
 }) => {
   return (
     <Layout.Content>
+      {contextHolder}
       <Suspense fallback={<NotFound />}>
         <Canvas shadows>
           <Environment preset="dawn" />

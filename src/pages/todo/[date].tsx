@@ -1,8 +1,15 @@
-import { Calendar, Drawer, FloatButton, Layout, Typography } from "antd";
+import {
+  Calendar,
+  Drawer,
+  FloatButton,
+  Layout,
+  Typography,
+  message,
+} from "antd";
 import SideBar from "@/components/todoComponents/sideBar/SideBar";
 import { useRouter } from "next/router";
 import NotFound from "@/components/styledComponents/NotFound";
-import { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/api/axiosInstance";
 import { Action, TodoItemDto } from "@/types/TodoDto";
@@ -17,6 +24,7 @@ import dayjs, { type Dayjs } from "dayjs";
 import TodoPlaceCanvas from "@/components/todoComponents/canvas/TodoPlaceCanvas";
 import TodoCanvas from "@/components/todoComponents/canvas/TodoCanvas";
 import TodoGameCanvas from "@/components/todoComponents/canvas/TodoGameCanvas";
+import CanvasSettings from "@/components/todoComponents/canvas/CanvasSettings";
 
 const defaultTodo: TodoItemDto = {
   id: 0,
@@ -67,6 +75,7 @@ const TodoPage = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [place, setPlace] = useState<string>();
   const [chosenTodo, setChosenTodo] = useState<TodoItemDto>();
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     const getTodoItems = async () => {
@@ -98,24 +107,33 @@ const TodoPage = () => {
   }
   return (
     <Layout style={{ minHeight: "100vh" }}>
+      {contextHolder}
       <SideBar
         todoListState={todoListState}
         todoListDispatch={todoListDispatch}
       />
-      {!place && <TodoCanvas setPlace={setPlace} />}
-      {place && chosenTodo === undefined && (
-        <TodoPlaceCanvas
-          setPlace={setPlace}
-          todoListState={todoListState}
-          setChosenTodo={(chosenTodo: TodoItemDto) => setChosenTodo(chosenTodo)}
-        />
-      )}
-      {place && chosenTodo !== undefined && (
-        <TodoGameCanvas
-          chosenTodo={chosenTodo}
-          todoListDispatch={todoListDispatch}
-        />
-      )}
+      <CanvasSettings>
+        <React.Fragment>
+          {!place && <TodoCanvas setPlace={setPlace} />}
+          {place && chosenTodo === undefined && (
+            <TodoPlaceCanvas
+              setPlace={setPlace}
+              todoListState={todoListState}
+              setChosenTodo={(chosenTodo: TodoItemDto) =>
+                setChosenTodo(chosenTodo)
+              }
+            />
+          )}
+          {place && chosenTodo !== undefined && (
+            <TodoGameCanvas
+              chosenTodo={chosenTodo}
+              setChosenTodo={() => setChosenTodo(undefined)}
+              todoListDispatch={todoListDispatch}
+              messageApi={messageApi}
+            />
+          )}
+        </React.Fragment>
+      </CanvasSettings>
       <Drawer
         width={600}
         open={isCalendarOpen}

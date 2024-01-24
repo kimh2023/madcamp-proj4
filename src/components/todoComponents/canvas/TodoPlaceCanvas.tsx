@@ -12,7 +12,6 @@ import Todo from "./TodoPlaceCanvas/Todo";
 import Terrain from "./terrain/Terrain";
 import Stickers from "./terrain/Stickers";
 import Arrow from "./terrain/Arrow";
-import CanvasSettings from "./CanvasSettings";
 
 const Rabbit = lazy(() => import("./models/Rabbit"));
 
@@ -42,7 +41,7 @@ const TodoPlaceCanvas = ({
   };
 
   return (
-    <CanvasSettings>
+    <React.Fragment>
       <Rabbit
         isPlace={true}
         goOut={() => setPlace(undefined)}
@@ -55,7 +54,7 @@ const TodoPlaceCanvas = ({
         <meshBasicMaterial color={"#F68C9C"} />
       </mesh>
       <Arrow index={0} />
-      <>
+      <React.Fragment>
         {currentTodo.map((todoItem, index) => (
           <Todo
             key={index}
@@ -65,10 +64,10 @@ const TodoPlaceCanvas = ({
             position={[(index + 1) * 30, 0, 40 * ((index + 1) % 2)]}
           />
         ))}
-      </>
+      </React.Fragment>
       <Terrain onClick={handleCanvasClick} />
       <Stickers />
-    </CanvasSettings>
+    </React.Fragment>
   );
 };
 
