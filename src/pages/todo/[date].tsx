@@ -16,6 +16,7 @@ import { Action, TodoItemDto } from "@/types/TodoDto";
 import {
   CalendarFilled,
   MoreOutlined,
+  RocketOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -173,6 +174,15 @@ const TodoPage = () => {
           tooltip={
             <Typography.Text style={{ color: "white" }}>
               계정 설정
+            </Typography.Text>
+          }
+        />
+        <FloatButton
+          icon={<RocketOutlined />}
+          onClick={() => router.push(`/settings/friends`)}
+          tooltip={
+            <Typography.Text style={{ color: "white" }}>
+              친구 설정
             </Typography.Text>
           }
         />

@@ -22,6 +22,7 @@ const SignupPage = () => {
 
   const [form] = Form.useForm();
   const onFinish = async (values: SignUpDto) => {
+    console.log(values);
     setErrorCode(null);
     const { data, error } = await axiosWrapper(
       axiosInstance.post("/auth/signup", values),

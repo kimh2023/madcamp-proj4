@@ -3,6 +3,7 @@ import axiosInstance from "@/utils/api/axiosInstance";
 import { formatDate } from "@/utils/formatDate";
 import {
   LogoutOutlined,
+  RocketOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -32,6 +33,7 @@ function getItem(
 const items: MenuItem[] = [
   getItem("프로필 설정", "profile", <UserOutlined />),
   getItem("계정 설정", "account", <SettingOutlined />),
+  getItem("친구 설정", "friends", <RocketOutlined />),
 ];
 
 const logoutItem: MenuItem[] = [
