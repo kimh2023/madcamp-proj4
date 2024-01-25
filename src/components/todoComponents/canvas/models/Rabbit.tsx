@@ -7,10 +7,10 @@ import GoOutArrow from "../TodoPlaceCanvas/GoOutArrow";
 import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
 import { SkeletonUtils } from "three-stdlib";
 import { io } from "socket.io-client";
+import { useRouter } from "next/router";
 
 interface RabbitProps extends GroupProps {
   place?: string;
-  isMain?: boolean;
   goOut?: () => void;
 }
 
@@ -19,19 +19,14 @@ const socket = io(
   { withCredentials: true },
 );
 
-const Rabbit = ({ place, isMain, goOut, ...props }: RabbitProps) => {
+const Rabbit = ({ place, goOut, ...props }: RabbitProps) => {
+  const router = useRouter();
   const group = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
   const { scene, materials, animations } = useGLTF("/models/rabbit/rabbit.glb");
   const { actions } = useAnimations(animations, group);
 
-  // const model = useGLTF(`/models/rabbit/rabbit.glb`);
-  // const mesh =
-  //   useRef<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>>>(
-  //     null,
-  //   );
   const [animation, setAnimation] = useState("");
   const position = useMemo(() => props.position, []);
-  // const { actions } = useAnimations(model.animations, mesh);
 
   const { playing, toggle } = useAudio("/sounds/walk.mp3");
 
@@ -43,6 +38,26 @@ const Rabbit = ({ place, isMain, goOut, ...props }: RabbitProps) => {
   }, [animation]);
 
   useFrame(() => {
+    if (group?.current) {
+      const direction = group.current.position
+        .clone()
+        .sub(props.position as THREE.Vector3)
+        .normalize()
+        .multiplyScalar(0.1);
+      socket.emit("location", {
+        position: group.current.position,
+        direction: {
+          x: props.position ? (props.position as THREE.Vector3).x : 0,
+          y: 0,
+          z: props.position ? (props.position as THREE.Vector3).z : 0,
+        },
+        place: place ? place : "MAIN",
+        isWalking:
+          group?.current.position.distanceTo(props.position as THREE.Vector3) >
+          0.1,
+        map: Number(router.query.id),
+      });
+    }
     if (
       group?.current &&
       group?.current.position.distanceTo(props.position as THREE.Vector3) > 0.1
@@ -54,16 +69,6 @@ const Rabbit = ({ place, isMain, goOut, ...props }: RabbitProps) => {
         .multiplyScalar(0.1);
       group.current.position.sub(direction);
       group.current.lookAt(props.position as THREE.Vector3);
-      console.log("DIRECTION", group.current.getWorldDirection(direction));
-      socket.emit("location", {
-        position: group.current.position,
-        direction: {
-          x: group.current.getWorldDirection(direction).x,
-          y: 0,
-          z: group.current.getWorldDirection(direction).z,
-        },
-        place: place ? place : "MAIN",
-      });
 
       setAnimation("walk");
       if (!playing) {
@@ -95,11 +100,10 @@ const Rabbit = ({ place, isMain, goOut, ...props }: RabbitProps) => {
   if (!nodes) {
     return <></>;
   }
-  console.log(materials);
 
   return (
     <group ref={group} {...props} position={position} dispose={null}>
-      {place !== undefined && isMain && (
+      {place !== undefined && (
         <React.Fragment>
           {/* <PerspectiveCamera
             makeDefault
@@ -138,7 +142,7 @@ const Rabbit = ({ place, isMain, goOut, ...props }: RabbitProps) => {
             <skinnedMesh
               name="Sphere004_1"
               geometry={(nodes?.Sphere004_1 as any)?.geometry}
-              material={isMain ? materials.white : materials.grey}
+              material={materials.white}
               skeleton={(nodes?.Sphere004_1 as any)?.skeleton}
             />
             <skinnedMesh

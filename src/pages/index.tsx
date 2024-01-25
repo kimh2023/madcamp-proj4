@@ -1,7 +1,7 @@
+import LoadingPage from "@/components/styledComponents/LoadingPage";
 import axiosInstance from "@/utils/api/axiosInstance";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import { formatDate } from "@/utils/formatDate";
-import { Layout, Spin } from "antd";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -22,11 +22,7 @@ const Home = () => {
     checkAccess();
   }, []);
 
-  return (
-    <Layout style={{ minHeight: "100vh", justifyContent: "center" }}>
-      <Spin />
-    </Layout>
-  );
+  return <LoadingPage />;
 };
 
 export default Home;

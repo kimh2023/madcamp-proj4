@@ -1,31 +1,20 @@
-import {
-  Calendar,
-  Drawer,
-  FloatButton,
-  Layout,
-  Typography,
-  message,
-} from "antd";
+import { Calendar, Drawer, FloatButton, Layout, message } from "antd";
 import SideBar from "@/components/todoComponents/sideBar/SideBar";
 import { useRouter } from "next/router";
-import NotFound from "@/components/styledComponents/NotFound";
 import React, { useEffect, useReducer, useState } from "react";
 import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/api/axiosInstance";
 import { Action, TodoItemDto } from "@/types/TodoDto";
-import {
-  CalendarFilled,
-  MoreOutlined,
-  RocketOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { CalendarFilled } from "@ant-design/icons";
 import { formatDate, formatDayjsDate, getDayjs } from "@/utils/formatDate";
 import dayjs, { type Dayjs } from "dayjs";
 import TodoPlaceCanvas from "@/components/todoComponents/canvas/TodoPlaceCanvas";
 import TodoCanvas from "@/components/todoComponents/canvas/TodoCanvas";
 import TodoGameCanvas from "@/components/todoComponents/canvas/TodoGameCanvas";
 import CanvasSettings from "@/components/todoComponents/canvas/CanvasSettings";
+import FloatGroup from "@/components/todoComponents/FloatGroup";
+import { useSocket } from "@/utils/useSocket";
+import LoadingPage from "@/components/styledComponents/LoadingPage";
 
 const defaultTodo: TodoItemDto = {
   id: 0,
@@ -78,6 +67,15 @@ const TodoPage = () => {
   const [chosenTodo, setChosenTodo] = useState<TodoItemDto>();
   const [messageApi, contextHolder] = message.useMessage();
 
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      console.log("join");
+      socket.emit("joinMap", { map: Number(router.query.id) });
+    }
+  }, [router.query.id, socket]);
+
   useEffect(() => {
     const getTodoItems = async () => {
       const dateFormatRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -103,8 +101,12 @@ const TodoPage = () => {
     getTodoItems();
   }, [router.query.date]);
 
-  if (typeof router.query.date !== "string" || todoListState === undefined) {
-    return <NotFound></NotFound>;
+  if (
+    typeof router.query.date !== "string" ||
+    todoListState === undefined ||
+    !socket
+  ) {
+    return <LoadingPage />;
   }
 
   return (
@@ -116,9 +118,11 @@ const TodoPage = () => {
       />
       <CanvasSettings>
         <React.Fragment>
-          {!place && <TodoCanvas setPlace={setPlace} />}
+          {!place && <TodoCanvas socket={socket} setPlace={setPlace} />}
           {place && chosenTodo === undefined && (
             <TodoPlaceCanvas
+              socket={socket}
+              isFriendsMap={false}
               place={place}
               setPlace={setPlace}
               todoListState={todoListState}
@@ -158,35 +162,7 @@ const TodoPage = () => {
         icon={<CalendarFilled />}
         onClick={() => setIsCalendarOpen(true)}
       />
-      <FloatButton.Group trigger="click" icon={<MoreOutlined />}>
-        <FloatButton
-          icon={<UserOutlined />}
-          onClick={() => router.push(`/settings/profile`)}
-          tooltip={
-            <Typography.Text style={{ color: "white" }}>
-              프로필 설정
-            </Typography.Text>
-          }
-        />
-        <FloatButton
-          icon={<SettingOutlined />}
-          onClick={() => router.push(`/settings/account`)}
-          tooltip={
-            <Typography.Text style={{ color: "white" }}>
-              계정 설정
-            </Typography.Text>
-          }
-        />
-        <FloatButton
-          icon={<RocketOutlined />}
-          onClick={() => router.push(`/settings/friends`)}
-          tooltip={
-            <Typography.Text style={{ color: "white" }}>
-              친구 설정
-            </Typography.Text>
-          }
-        />
-      </FloatButton.Group>
+      <FloatGroup />
     </Layout>
   );
 };
