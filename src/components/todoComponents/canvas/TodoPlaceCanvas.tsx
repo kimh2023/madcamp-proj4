@@ -32,21 +32,27 @@ const TodoPlaceCanvas = ({
   setPlace: Dispatch<SetStateAction<string | undefined>>;
   setChosenTodo: (chosenTodo: TodoItemDto) => void;
 }) => {
+  const currentTodo = useMemo(
+    () => todoListState.filter((todoItem) => todoItem.place === place),
+    [todoListState, place],
+  );
+  const firstUnfinishedIndexPlus1 = useMemo(() => {
+    const unfinishedTodo = currentTodo.find(
+      (todo) => todo.completed_in_progress !== "COMPLETE",
+    );
+    return unfinishedTodo ? currentTodo.indexOf(unfinishedTodo) + 1 : 0;
+  }, [currentTodo]);
   const [rabbitPosition, setRabbitPosition] = useState<Vector3>(
-    new Vector3(0, 0, 0),
+    new Vector3(
+      firstUnfinishedIndexPlus1 * 30 - 12,
+      0,
+      40 * (firstUnfinishedIndexPlus1 % 2),
+    ),
   );
   const [otherRabbitInfo, setOtherRabbitInfo] = useState<MultipleLocationsDto>(
     {},
   );
   const [myUserInfo, setMyUserInfo] = useState(0);
-  const currentTodo = useMemo(() => todoListState, [todoListState]);
-  // const currentTodo = useMemo(
-  //   () =>
-  //     todoListState.filter(
-  //       (todoItem) => todoItem.completed_in_progress !== "COMPLETE",
-  //     ),
-  //   [todoListState],
-  // );
 
   const handleCanvasClick = (event: ThreeEvent<MouseEvent>) => {
     setRabbitPosition(new Vector3(event.point.x, 0, event.point.z));

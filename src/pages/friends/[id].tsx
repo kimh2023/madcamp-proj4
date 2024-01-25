@@ -11,7 +11,7 @@ import { formatDate } from "@/utils/formatDate";
 import { useSocket } from "@/utils/useSocket";
 import { Layout } from "antd";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const FriendPage = () => {
   const router = useRouter();
@@ -21,30 +21,36 @@ const FriendPage = () => {
 
   const socket = useSocket();
 
+  const getTodoItems = useCallback(async () => {
+    if (router.query.id === undefined) {
+      return;
+    }
+    const { data, error } = await axiosWrapper(
+      axiosInstance.get(`/friends/${router.query.id}/map`),
+    );
+    if (error === null) {
+      setTodoListState(data.todo as TodoItemDto[]);
+      setFriend(data.friend);
+    } else {
+      router.push(`/todo/${formatDate(null)}`);
+    }
+  }, [router.query.id]);
+
   useEffect(() => {
     if (socket) {
       console.log("join");
       socket.emit("joinMap", { map: Number(router.query.id) });
+      socket.on("updateReturn", () => {
+        setTimeout(() => getTodoItems(), 1000);
+        // 채ㅜ
+        console.log("????");
+      });
     }
-  }, [router.query.id, socket]);
+  }, [router.query.id, socket, getTodoItems]);
 
   useEffect(() => {
-    const getTodoItems = async () => {
-      if (router.query.id === undefined) {
-        return;
-      }
-      const { data, error } = await axiosWrapper(
-        axiosInstance.get(`/friends/${router.query.id}/map`),
-      );
-      if (error === null) {
-        setTodoListState(data.todo as TodoItemDto[]);
-        setFriend(data.friend);
-      } else {
-        router.push(`/todo/${formatDate(null)}`);
-      }
-    };
     getTodoItems();
-  }, [router.query.id]);
+  }, [getTodoItems]);
 
   if (!friend || !socket) {
     return <LoadingPage />;

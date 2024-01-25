@@ -113,6 +113,7 @@ const TodoPage = () => {
     <Layout style={{ minHeight: "100vh" }}>
       {contextHolder}
       <SideBar
+        socket={socket}
         todoListState={todoListState}
         todoListDispatch={todoListDispatch}
       />

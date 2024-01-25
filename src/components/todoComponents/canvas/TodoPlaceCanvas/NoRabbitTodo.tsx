@@ -23,7 +23,6 @@ const NoRabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
         return "rabbit.glb";
     }
   }, [animation]);
-  console.log(animation);
 
   const { scene } = useGLTF(`/models/norabbit/${loadedAnimation}`);
 

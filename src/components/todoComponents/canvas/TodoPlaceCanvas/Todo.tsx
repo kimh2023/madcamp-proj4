@@ -26,7 +26,7 @@ const Todo = ({
         <cylinderGeometry args={[6, 6, 0.5, 64]} />
         <meshBasicMaterial color={style.DARK_PINK} />
       </mesh>
-      {!isFriendsMap && (
+      {!isFriendsMap && todoItem.completed_in_progress !== "COMPLETE" && (
         <StartGameButton setChosenTodo={() => setChosenTodo(todoItem)} />
       )}
       <Arrow index={index} />

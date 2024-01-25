@@ -31,6 +31,18 @@ const Rabbit = ({ place, goOut, ...props }: RabbitProps) => {
   const { playing, toggle } = useAudio("/sounds/walk.mp3");
 
   useEffect(() => {
+    if (group?.current && position && place) {
+      group.current.lookAt(
+        new THREE.Vector3(
+          (position as THREE.Vector3).x + 10,
+          0,
+          (position as THREE.Vector3).z,
+        ),
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     actions[animation]?.reset().fadeIn(0.1).play();
     return (): void => {
       actions[animation]?.fadeOut(0.5);
@@ -39,11 +51,6 @@ const Rabbit = ({ place, goOut, ...props }: RabbitProps) => {
 
   useFrame(() => {
     if (group?.current) {
-      const direction = group.current.position
-        .clone()
-        .sub(props.position as THREE.Vector3)
-        .normalize()
-        .multiplyScalar(0.1);
       socket.emit("location", {
         position: group.current.position,
         direction: {
@@ -113,13 +120,14 @@ const Rabbit = ({ place, goOut, ...props }: RabbitProps) => {
           <PerspectiveCamera
             makeDefault
             rotation={[0.7, Math.PI, 0]}
-            position={[0, 16, -15]}
+            position={[0, 17, -12]}
             far={100}
           />
           <GoOutArrow
             // rotation={[Math.PI / 2 + 0.8, 0.5, 0]}
             // position={[-innerWidth / 60, 0, -15]}
-            rotation={[Math.PI / 2, -0.5, -0.5]}
+            // rotation={[Math.PI / 2, -0.5, -0.5]}
+            rotation={[-Math.PI / 2 + 0.8, -Math.PI, 0]}
             position={[12, 3, 17]}
             onPointerEnter={hoverEnter}
             onPointerLeave={hoverLeave}
