@@ -95,7 +95,7 @@ const TodoPage = () => {
       if (error === null) {
         todoListDispatch({ type: "init", data: data as TodoItemDto[] });
       } else {
-        alert("에러 발생 로직 구현 필요");
+        console.log("에러 발생 로직 구현 필요");
       }
     };
     getTodoItems();

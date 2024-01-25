@@ -30,7 +30,7 @@ const SignupPage = () => {
 
     if (error === null) {
       setIsSuccessVisible(true);
-      setTimeout(() => router.push(`/todo/${formatDate(null)}`), 500);
+      setTimeout(() => router.push(`/todo/${formatDate(null)}`), 1000);
     } else {
       setErrorCode(error.status);
     }

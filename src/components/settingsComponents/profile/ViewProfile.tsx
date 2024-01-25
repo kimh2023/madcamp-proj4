@@ -53,7 +53,7 @@ const ViewProfile = () => {
         name: data.name,
       });
     } else {
-      alert("에러 발생 로직 구현 필요");
+      console.log("에러 발생 로직 구현 필요");
     }
   }, [form]);
 

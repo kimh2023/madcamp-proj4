@@ -5,6 +5,7 @@ export const axiosWrapper = async (
 ) => {
   try {
     const response = await axiosPromise;
+    console.log(JSON.stringify(response.headers));
     return { data: response.data, error: null };
   } catch (error: any) {
     const status = error.response ? error.response.status : null;
