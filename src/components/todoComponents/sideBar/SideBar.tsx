@@ -11,13 +11,16 @@ import { axiosWrapper } from "@/utils/api/axiosWrapper";
 import axiosInstance from "@/utils/api/axiosInstance";
 import { useRouter } from "next/router";
 import { getDate } from "@/utils/formatDate";
+import { Socket } from "socket.io-client";
 
 const SideBar = ({
   todoListState,
   todoListDispatch,
+  socket,
 }: {
   todoListState: TodoItemDto[];
   todoListDispatch: Dispatch<Action>;
+  socket: Socket;
 }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -83,6 +86,7 @@ const SideBar = ({
         messageApi.error("오류가 있었습니다");
       } else {
         messageApi.success("성공적으로 저장했습니다!");
+        socket.emit("update");
       }
       setTimeout(() => setIsUpdating(false), 1000);
     }

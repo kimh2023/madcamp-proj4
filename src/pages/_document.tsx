@@ -6,7 +6,7 @@ import type { DocumentContext } from "next/document";
 const MyDocument = () => (
   <Html lang="en">
     <Head>
-      <title>오늘의 일기</title>
+      <title>오늘도 토끼는 바쁘다</title>
     </Head>
     <body>
       <Main />

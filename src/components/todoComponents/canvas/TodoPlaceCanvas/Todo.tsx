@@ -7,19 +7,28 @@ import { style } from "@/styles/variables";
 import NoRabbitTodo from "./NoRabbitTodo";
 
 interface TodoProps extends GroupProps {
+  isFriendsMap: boolean;
   index: number;
   todoItem: TodoItemDto;
   setChosenTodo: (chosenTodo: TodoItemDto) => void;
 }
 
-const Todo = ({ index, todoItem, setChosenTodo, ...props }: TodoProps) => {
+const Todo = ({
+  isFriendsMap,
+  index,
+  todoItem,
+  setChosenTodo,
+  ...props
+}: TodoProps) => {
   return (
     <group {...props}>
       <mesh>
         <cylinderGeometry args={[6, 6, 0.5, 64]} />
         <meshBasicMaterial color={style.DARK_PINK} />
       </mesh>
-      <StartGameButton setChosenTodo={() => setChosenTodo(todoItem)} />
+      {!isFriendsMap && todoItem.completed_in_progress !== "COMPLETE" && (
+        <StartGameButton setChosenTodo={() => setChosenTodo(todoItem)} />
+      )}
       <Arrow index={index} />
       <NoRabbitTodo
         animation={todoItem.animation}

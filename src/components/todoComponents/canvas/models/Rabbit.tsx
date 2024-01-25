@@ -6,28 +6,41 @@ import { useAudio } from "@/utils/useAudio";
 import GoOutArrow from "../TodoPlaceCanvas/GoOutArrow";
 import { hoverEnter, hoverLeave } from "@/utils/hoverHandler";
 import { SkeletonUtils } from "three-stdlib";
+import { io } from "socket.io-client";
+import { useRouter } from "next/router";
 
 interface RabbitProps extends GroupProps {
-  isPlace: boolean;
-  isMain?: boolean;
+  place?: string;
   goOut?: () => void;
 }
 
-const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
+const socket = io(
+  process.env.BACKEND_URL ? process.env.BACKEND_URL : "http://localhost:3000",
+  { withCredentials: true },
+);
+
+const Rabbit = ({ place, goOut, ...props }: RabbitProps) => {
+  const router = useRouter();
   const group = useRef<THREE.Group<THREE.Object3DEventMap>>(null);
   const { scene, materials, animations } = useGLTF("/models/rabbit/rabbit.glb");
   const { actions } = useAnimations(animations, group);
 
-  // const model = useGLTF(`/models/rabbit/rabbit.glb`);
-  // const mesh =
-  //   useRef<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>>>(
-  //     null,
-  //   );
   const [animation, setAnimation] = useState("");
   const position = useMemo(() => props.position, []);
-  // const { actions } = useAnimations(model.animations, mesh);
 
   const { playing, toggle } = useAudio("/sounds/walk.mp3");
+
+  useEffect(() => {
+    if (group?.current && position && place) {
+      group.current.lookAt(
+        new THREE.Vector3(
+          (position as THREE.Vector3).x + 10,
+          0,
+          (position as THREE.Vector3).z,
+        ),
+      );
+    }
+  }, []);
 
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.1).play();
@@ -37,6 +50,21 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
   }, [animation]);
 
   useFrame(() => {
+    if (group?.current) {
+      socket.emit("location", {
+        position: group.current.position,
+        direction: {
+          x: props.position ? (props.position as THREE.Vector3).x : 0,
+          y: 0,
+          z: props.position ? (props.position as THREE.Vector3).z : 0,
+        },
+        place: place ? place : "MAIN",
+        isWalking:
+          group?.current.position.distanceTo(props.position as THREE.Vector3) >
+          0.1,
+        map: Number(router.query.id),
+      });
+    }
     if (
       group?.current &&
       group?.current.position.distanceTo(props.position as THREE.Vector3) > 0.1
@@ -48,7 +76,6 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
         .multiplyScalar(0.1);
       group.current.position.sub(direction);
       group.current.lookAt(props.position as THREE.Vector3);
-      console.log("DIRECTION", group.current.getWorldDirection(direction));
 
       setAnimation("walk");
       if (!playing) {
@@ -80,11 +107,10 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
   if (!nodes) {
     return <></>;
   }
-  console.log(materials);
 
   return (
     <group ref={group} {...props} position={position} dispose={null}>
-      {isPlace && isMain && (
+      {place !== undefined && (
         <React.Fragment>
           {/* <PerspectiveCamera
             makeDefault
@@ -94,13 +120,14 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
           <PerspectiveCamera
             makeDefault
             rotation={[0.7, Math.PI, 0]}
-            position={[0, 16, -15]}
+            position={[0, 17, -12]}
             far={100}
           />
           <GoOutArrow
             // rotation={[Math.PI / 2 + 0.8, 0.5, 0]}
             // position={[-innerWidth / 60, 0, -15]}
-            rotation={[Math.PI / 2, -0.5, -0.5]}
+            // rotation={[Math.PI / 2, -0.5, -0.5]}
+            rotation={[-Math.PI / 2 + 0.8, -Math.PI, 0]}
             position={[12, 3, 17]}
             onPointerEnter={hoverEnter}
             onPointerLeave={hoverLeave}
@@ -123,7 +150,7 @@ const Rabbit = ({ isPlace, isMain, goOut, ...props }: RabbitProps) => {
             <skinnedMesh
               name="Sphere004_1"
               geometry={(nodes?.Sphere004_1 as any)?.geometry}
-              material={isMain ? materials.white : materials.grey}
+              material={materials.white}
               skeleton={(nodes?.Sphere004_1 as any)?.skeleton}
             />
             <skinnedMesh

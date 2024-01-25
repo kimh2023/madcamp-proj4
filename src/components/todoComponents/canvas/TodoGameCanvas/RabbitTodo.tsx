@@ -58,7 +58,6 @@ const RabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
     `/models/rabbit/${loadedAnimation.file}`,
   );
   const { actions } = useAnimations(animations, mesh);
-  console.log(actions);
 
   useEffect(() => {
     loadedAnimation.animation.forEach((animationKey) => {
@@ -72,13 +71,6 @@ const RabbitTodo = ({ animation, ...props }: NoRabbitTodoProps) => {
   }, [loadedAnimation.animation, actions]);
 
   return (
-    // <Clone
-    //   ref={mesh}
-    //   object={scene}
-    //   {...props}
-    //   onPointerOver={hoverEnter}
-    //   onPointerLeave={hoverLeave}
-    // />
     <mesh
       ref={mesh}
       {...props}
