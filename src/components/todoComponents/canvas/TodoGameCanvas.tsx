@@ -21,11 +21,11 @@ const TodoGameCanvas = ({
   todoListDispatch: Dispatch<Action>;
   messageApi: MessageInstance;
 }) => {
-  const [progress, setProgress] = useState(0.1);
+  const [progress, setProgress] = useState(0.2);
   const { playing, toggle } = useAudio("/sounds/point.mp3");
 
   const handleClick = async () => {
-    setProgress((prevState) => Math.min(1, prevState + 0.1));
+    setProgress((prevState) => Math.min(1, prevState + 0.205));
     if (!playing) {
       toggle();
       setTimeout(() => toggle(), 10);
