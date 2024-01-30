@@ -1,4 +1,4 @@
-import NotFound from "@/components/styledComponents/NotFound";
+import LoadingPage from "@/components/styledComponents/LoadingPage";
 import { Environment } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Layout } from "antd";
@@ -16,7 +16,7 @@ const CanvasSettings = ({
   return (
     <Layout.Content>
       {contextHolder}
-      <Suspense fallback={<NotFound />}>
+      <Suspense fallback={<LoadingPage />}>
         <Canvas shadows>
           <Environment preset="dawn" />
           <directionalLight intensity={1} castShadow />
